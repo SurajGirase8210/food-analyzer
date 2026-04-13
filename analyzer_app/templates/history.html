@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My History</title>
+    <link rel="stylesheet" href="{% static 'header.css' %}">
+</head>
+<body>
+
+{% include 'header.html' %}
+
+<main class="container">
+    <h2>My Food History</h2>
+
+    {% if history %}
+        <table>
+            <tr>
+                <th>Food</th>
+                <th>Confidence</th>
+                <th>Calories</th>
+                <th>Date</th>
+            </tr>
+
+            {% for item in history %}
+            <tr>
+                <td>{{ item.food_name }}</td>
+                <td>{{ item.confidence|floatformat:2 }}</td>
+                <td>{{ item.calories }}</td>
+                <td>{{ item.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No history yet.</p>
+    {% endif %}
+</main>
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>

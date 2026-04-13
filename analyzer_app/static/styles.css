@@ -1,0 +1,80 @@
+:root{
+  /* Light theme colors */
+  --bg: #ffffff;
+  --card: #ffffff;
+  --muted: #556;
+  --text: #111827;
+  --primary: #0078ff;
+  --primary-600: #005fcc;
+  --accent: #e8f1ff;
+  --shadow: rgba(0,0,0,0.08);
+}
+
+/* Dark theme variables (will be applied by .dark on body) */
+body.dark {
+  --bg: #0b0f18;
+  --card: #0f1724;
+  --muted: #9aa6b2;
+  --text: #e6eef8;
+  --primary: #2aa1ff;
+  --primary-600: #178fe0;
+  --accent: linear-gradient(135deg, rgba(30,60,90,0.15), rgba(10,20,40,0.15));
+  --shadow: rgba(0,0,0,0.6);
+}
+
+/* Global base */
+* { box-sizing: border-box; }
+html,body { height:100%; }
+body {
+  margin:0;
+  font-family: Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: var(--text);
+  transition: background .25s ease, color .25s ease;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* container */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* small helpers */
+.muted { color: var(--muted); }
+.section-title { font-size: 1.8rem; color: var(--primary); text-align:center; margin-bottom:1rem; }
+.cta-btn {
+  display:inline-block;
+  background:var(--primary);
+  color: #fff;
+  padding: .6rem 1rem;
+  border-radius: 10px;
+  text-decoration:none;
+  font-weight:600;
+  box-shadow: 0 8px 24px rgba(0,120,255,0.12);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.cta-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,120,255,0.14); }
+
+/* Fade-in */
+.fade-in { opacity:0; transform: translateY(8px); animation: fadeIn .6s forwards; }
+@keyframes fadeIn { to { opacity:1; transform: translateY(0); } }
+
+/* Cards */
+.card, .upload-card, .feature-card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px var(--shadow);
+  padding: 1rem;
+}
+
+/* Footer */
+.site-footer { margin-top: 2.5rem; padding:1.25rem 0; background:transparent; color:var(--muted); text-align:center; }
+
+/* small responsive */
+@media (max-width:600px){
+  .section-title { font-size:1.4rem; }
+}

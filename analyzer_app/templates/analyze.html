@@ -1,0 +1,80 @@
+<!-- UI LOCKED: Do not modify layout or styles -->
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analyze Food | Food Analyzer</title>
+
+    <!-- CSS (Correct Order) -->
+    <link rel="stylesheet" href="{% static 'header.css' %}" />
+    <link rel="stylesheet" href="{% static 'analyze.css' %}" />
+    <link rel="stylesheet" href="{% static 'responsive.css' %}" />
+  </head>
+
+  <body>
+    {% include 'header.html' %}
+
+    <main>
+      <div class="card">
+        <h2>Analyze Your Food</h2>
+        <p>Select one option below</p>
+
+        <!-- Upload Section -->
+        <h3>📤 Upload Image</h3>
+        <form id="uploadForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="file" name="file" accept="image/*" required />
+          <button type="submit">Analyze Image</button>
+        </form>
+
+        <img id="preview" class="hidden" />
+
+        <hr />
+
+        <!-- Camera -->
+        <h3>📷 Use Camera</h3>
+        <button id="cameraBtn" type="button">Open Camera</button>
+        <video id="cameraPreview" autoplay playsinline class="hidden"></video>
+        <button id="captureBtn" class="hidden">Capture & Analyze</button>
+        <canvas id="cameraCanvas" class="hidden"></canvas>
+
+        <hr />
+
+        <!-- Manual Entry -->
+        <h3>✍️ Manual Entry</h3>
+        <form id="manualForm">
+          <input type="text" id="foodName" placeholder="Food name" required />
+          <input
+            type="number"
+            id="foodQty"
+            placeholder="Quantity (grams)"
+            required
+          />
+          <button type="submit">Calculate</button>
+        </form>
+
+        <div id="manualResult" class="hidden">
+          <h3>Nutrition Details</h3>
+          <p id="manualText"></p>
+        </div>
+
+        <hr />
+
+        <!-- Result -->
+        <div id="result" class="hidden">
+          <h3>Nutrition Details</h3>
+          <p id="resultText"></p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2025 Food Analyzer Project</p>
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+FOOD_DATA = {
+    "pizza": {"calories": 266, "protein": 11, "fat": 10, "carbs": 33},
+    "hamburger": {"calories": 295, "protein": 17, "fat": 14, "carbs": 30},
+    "fried_rice": {"calories": 163, "protein": 5, "fat": 6, "carbs": 23},
+    "samosa": {"calories": 262, "protein": 6, "fat": 17, "carbs": 24},
+    "ice_cream": {"calories": 207, "protein": 3, "fat": 11, "carbs": 24},
+    "donuts": {"calories": 452, "protein": 4, "fat": 25, "carbs": 51},
+    "french_fries": {"calories": 312, "protein": 3, "fat": 15, "carbs": 41},
+    "chicken_curry": {"calories": 240, "protein": 20, "fat": 15, "carbs": 5},
+    "spaghetti_bolognese": {"calories": 158, "protein": 8, "fat": 6, "carbs": 20},
+    "steak": {"calories": 271, "protein": 25, "fat": 19, "carbs": 0},
+    "sushi": {"calories": 130, "protein": 6, "fat": 2, "carbs": 28},
+    "hot_dog": {"calories": 290, "protein": 10, "fat": 26, "carbs": 18},
+    "cup_cakes": {"calories": 305, "protein": 3, "fat": 13, "carbs": 45},
+    "chocolate_cake": {"calories": 371, "protein": 5, "fat": 15, "carbs": 58},
+    "carrot_cake": {"calories": 415, "protein": 4, "fat": 20, "carbs": 54},
+}

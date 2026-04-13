@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Analyzer | Home</title>
+
+  <!-- CSS (Correct Order) -->
+  <link rel="stylesheet" href="{% static 'header.css' %}">
+  <link rel="stylesheet" href="{% static 'home.css' %}">
+  <link rel="stylesheet" href="{% static 'responsive.css' %}">
+  
+</head>
+
+<body>
+
+  {% include 'header.html' %}
+
+  <section class="hero">
+    <div class="hero-text">
+      <h2>Analyze Your Food. Know What You Eat.</h2>
+      <p>Upload an image of your meal and get instant nutritional insights powered by AI.</p>
+      <a href="{% url 'analyze' %}" class="cta-btn">Try Now</a>
+    </div>
+
+    <div class="hero-image">
+      <img src="{% static 'images/hero-food.png' %}" alt="Food Image">
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+
+      <div class="step">
+        <img src="{% static 'images/upload.png' %}" alt="Upload Icon">
+        <h3>1. Upload</h3>
+        <p>Choose a food image.</p>
+      </div>
+
+      <div class="step">
+        <img src="{% static 'images/ai.png' %}" alt="AI Icon">
+        <h3>2. AI Analyzes</h3>
+        <p>AI identifies food and gives nutrition.</p>
+      </div>
+
+      <div class="step">
+        <img src="{% static 'images/result.png' %}" alt="Result Icon">
+        <h3>3. Get Results</h3>
+        <p>View calories, protein, fat, and carbs.</p>
+      </div>
+
+    </div>
+  </section>
+  {% if top_predictions %}
+    <h3>Predictions:</h3>
+    <ul>
+        {% for food, conf in top_predictions %}
+            <li>{{ food }} - {{ conf|floatformat:2 }}%</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+  <footer>
+    <p>© 2025 Food Analyzer | Smart Nutrition Estimator</p>
+  </footer>
+
+  <script src="{% static 'header.js' %}"></script>
+
+  <script src="{% static 'script.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #222;
+  background-color: #fff;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 8%;
+}
+
+.hero-text {
+  max-width: 500px;
+}
+
+.hero-text h2 {
+  font-size: 2.5rem;
+  color: #0078ff;
+}
+
+.hero-text p {
+  margin: 1rem 0 2rem;
+  color: #555;
+}
+
+.cta-btn {
+  background: #0078ff;
+  padding: 0.8rem 1.8rem;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.hero-image img {
+  width: 400px;
+}
+
+.how-it-works {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #f5f9ff;
+}
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.step {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 250px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.step img {
+  width: 60px;
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  background: #f3f3f3;
+}

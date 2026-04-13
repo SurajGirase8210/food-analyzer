@@ -1,0 +1,116 @@
+<!-- UI LOCKED: Do not modify layout or styles -->
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Food Analyzer</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'header.css' %}">
+  <link rel="stylesheet" href="{% static 'about.css' %}">
+  <link rel="stylesheet" href="{% static 'responsive.css' %}">
+</head>
+
+<body>
+
+  {% include 'header.html' %}
+
+  <section class="about-container">
+
+    <h2 class="about-title">About This Project</h2>
+
+    <p class="about-intro">
+      The <strong>Food Analyzer</strong> is an AI-powered web application designed to estimate the nutritional
+      content of food items from images. Users can upload a food photo or use the camera to instantly
+      receive calorie and macro predictions. This project is part of a final-year engineering program and
+      aims to combine technology with health awareness.
+    </p>
+
+    <!-- ROW 1 -->
+    <div class="about-card-grid">
+      <div class="about-card">
+        <h3>🎯 Objective</h3>
+        <p>
+          Helping users maintain a healthy lifestyle by providing fast, convenient, and accurate nutrition
+          estimation powered by AI.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <h3>🧠 Technology Stack</h3>
+        <p>
+          Django, Python, HTML, CSS, JavaScript, Machine Learning and AI models trained for food
+          recognition and nutrition estimation.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <h3>👨‍💻 Developed By</h3>
+        <p>
+          <strong>Suraj · Dhiraj · Ninad · Jayesh</strong><br>
+          Final Year Students
+        </p>
+      </div>
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="about-card-grid">
+      <div class="about-card">
+        <h3>💡 Motivation</h3>
+        <p>
+          Many people struggle to track calories accurately. Our system simplifies this by using image
+          analysis and nutrition prediction to help support healthier decisions.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <h3>⚙️ How It Works</h3>
+        <ul>
+          <li>Upload a food image or use live camera</li>
+          <li>AI detects the food category</li>
+          <li>Nutrition values retrieved from dataset</li>
+          <li>Instant results shown to the user</li>
+        </ul>
+      </div>
+
+      <div class="about-card">
+        <h3>🧩 Key Features</h3>
+        <ul>
+          <li>Food image recognition</li>
+          <li>Calorie & macro estimation</li>
+          <li>Manual nutrition entry</li>
+          <li>Camera capture support</li>
+          <li>Responsive UI</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ROW 3 -->
+    <div class="about-card-grid">
+      <div class="about-card">
+        <h3>🚀 Future Scope</h3>
+        <ul>
+          <li>Multi-food plate recognition</li>
+          <li>User login with calorie history</li>
+          <li>Smart diet recommendations</li>
+          <li>Daily nutrition tracking dashboard</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>© 2025 Food Analyzer | Final Year Project</p>
+  </footer>
+
+  <script src="{% static 'script.js' %}"></script>
+
+</body>
+
+</html>

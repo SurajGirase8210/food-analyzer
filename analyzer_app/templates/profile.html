@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile | Food Analyzer</title>
+
+    <link rel="stylesheet" href="{% static 'header.css' %}">
+    <link rel="stylesheet" href="{% static 'analyze.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'auth.css' %}">
+</head>
+
+<body>
+
+{% include 'header.html' %}
+
+<main>
+    <div class="card">
+
+        <h2>👤 My Profile</h2>
+        <p>Welcome, {{ user.username }}</p>
+
+        <hr>
+
+        <div class="profile-info">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Total Scans:</strong> {{ total_scans }}</p>
+            <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+        </div>
+
+        <hr>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'history' %}" class="btn signup-btn">View My History</a>
+        </div>
+
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 Food Analyzer Project</p>
+</footer>
+  <script src="{% static 'script.js' %}"></script>
+</body>
+</html>
