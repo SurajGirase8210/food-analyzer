@@ -1,39 +1,85 @@
 {% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My History</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>History</title>
+
     <link rel="stylesheet" href="{% static 'header.css' %}">
+    <link rel="stylesheet" href="{% static 'history.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
 </head>
 <body>
 
-{% include 'header.html' %}
+    {% include 'header.html' %}
 
-<main class="container">
-    <h2>My Food History</h2>
+    <div class="history-container">
 
-    {% if history %}
-        <table>
-            <tr>
-                <th>Food</th>
-                <th>Confidence</th>
-                <th>Calories</th>
-                <th>Date</th>
-            </tr>
+        <h1 class="history-title">
+            Scan History
+        </h1>
+
+        {% if history %}
+
+        <div class="history-grid">
 
             {% for item in history %}
-            <tr>
-                <td>{{ item.food_name }}</td>
-                <td>{{ item.confidence|floatformat:2 }}</td>
-                <td>{{ item.calories }}</td>
-                <td>{{ item.created_at }}</td>
-            </tr>
+
+            <div class="history-card">
+
+                <div class="food-name">
+                    {{ item.food_name }}
+                </div>
+
+                <div class="history-info">
+                    <span>Calories:</span>
+                    {{ item.calories }} kcal
+                </div>
+
+                <div class="history-info">
+                    <span>Protein:</span>
+                    {{ item.protein }} g
+                </div>
+
+                <div class="history-info">
+                    <span>Fat:</span>
+                    {{ item.fat }} g
+                </div>
+
+                <div class="history-info">
+                    <span>Carbs:</span>
+                    {{ item.carbs }} g
+                </div>
+
+                <div class="confidence">
+                    {{ item.confidence|floatformat:2 }} Confidence
+                </div>
+
+                <div class="history-date">
+                    {{ item.created_at }}
+                </div>
+
+            </div>
+
             {% endfor %}
-        </table>
-    {% else %}
-        <p>No history yet.</p>
-    {% endif %}
-</main>
-<script src="{% static 'script.js' %}"></script>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-history">
+            <h2>No History Yet</h2>
+            <p>Your analyzed foods will appear here.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <script src="{% static 'script.js' %}"></script>
+
 </body>
 </html>

@@ -1,0 +1,33 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<nav class="navbar">
+
+    <div class="logo">
+        <a href="/">Food Analyzer</a>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/analyze/">Analyze</a>
+
+        <a href="/about/">About</a>
+
+        {% if user.is_authenticated %}
+
+            <a href="/profile/">My Profile</a>
+
+            <a href="/dashboard/">Dashboard</a>
+
+            <a href="/history/">My History</a>
+
+            <a href="/logout/">Logout</a>
+
+        {% endif %}
+
+    </div>
+
+</nav>

@@ -3,7 +3,7 @@ console.log("Script loaded");
 document.addEventListener("DOMContentLoaded", function () {
   /* ---------- ELEMENTS ---------- */
   const uploadForm = document.getElementById("uploadForm");
-  const resultText = document.getElementById("resultText");
+  
   const resultDiv = document.getElementById("result");
 
   const fileInput = document.querySelector('input[type="file"]');
@@ -27,33 +27,80 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* ---------- UI HELPERS ---------- */
-  function showLoading(msg) {
-    resultText.textContent = msg;
-    resultDiv.classList.remove("hidden");
+
+function showLoading(msg) {
+
+  resultDiv.classList.remove("hidden");
+
+  document.getElementById("foodTitle").innerText =
+    "Analyzing...";
+
+  document.getElementById("confidenceText").innerText =
+    "...";
+
+  document.getElementById("caloriesText").innerText =
+    "...";
+
+  document.getElementById("proteinText").innerText =
+    "...";
+
+  document.getElementById("fatText").innerText =
+    "...";
+
+  document.getElementById("carbsText").innerText =
+    "...";
+}
+
+function showError(msg) {
+
+  resultDiv.classList.remove("hidden");
+
+  document.getElementById("foodTitle").innerText =
+    "Error";
+
+  document.getElementById("confidenceText").innerText =
+    "0%";
+
+  document.getElementById("caloriesText").innerText =
+    msg;
+
+  document.getElementById("proteinText").innerText =
+    "-";
+
+  document.getElementById("fatText").innerText =
+    "-";
+
+  document.getElementById("carbsText").innerText =
+    "-";
+}
+
+function showResult(data) {
+
+  resultDiv.classList.remove("hidden");
+
+  if (data.error) {
+    showError(data.error);
+    return;
   }
 
-  function showError(msg) {
-    resultText.innerHTML = `<span style="color:red;">${msg}</span>`;
-    resultDiv.classList.remove("hidden");
-  }
+  document.getElementById("foodTitle").innerText =
+    data.food;
 
-  function showResult(data) {
-    resultDiv.classList.remove("hidden");
+  document.getElementById("confidenceText").innerText =
+    data.confidence + "%";
 
-    if (data.error) {
-      resultText.textContent = data.error;
-      return;
-    }
+  document.getElementById("caloriesText").innerText =
+    data.calories ?? "N/A";
 
-    resultText.innerHTML = `
-      <p><strong>Food:</strong> ${data.food}</p>
-      <p><strong>Confidence:</strong> ${data.confidence}%</p>
-      <p><strong>Calories:</strong> ${data.calories ?? "N/A"} kcal</p>
-      <p><strong>Protein:</strong> ${data.protein ?? "N/A"} g</p>
-      <p><strong>Fat:</strong> ${data.fat ?? "N/A"} g</p>
-      <p><strong>Carbs:</strong> ${data.carbs ?? "N/A"} g</p>
-    `;
-  }
+  document.getElementById("proteinText").innerText =
+    (data.protein ?? "N/A") + " g";
+
+  document.getElementById("fatText").innerText =
+    (data.fat ?? "N/A") + " g";
+
+  document.getElementById("carbsText").innerText =
+    (data.carbs ?? "N/A") + " g";
+}
 
   /* ---------- IMAGE UPLOAD ---------- */
   uploadForm.addEventListener("submit", async (e) => {
@@ -66,6 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const formData = new FormData(uploadForm);
+
+      const file = fileInput.files[0];
+
+if(file){
+    document.getElementById("resultImage").src =
+        URL.createObjectURL(file);
+}
 
       const res = await fetch("/analyze/do/", {
         method: "POST",
@@ -136,6 +190,8 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.drawImage(video, 0, 0, 224, 224);
 
     canvas.toBlob(async (blob) => {
+      document.getElementById("resultImage").src =
+    URL.createObjectURL(blob);
       if (!blob) {
         showError("Capture failed");
         resetCamera();

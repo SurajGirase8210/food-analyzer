@@ -33,7 +33,7 @@ model = None
 def get_model():
     global model
     if model is None:
-        model_path = os.path.join(settings.BASE_DIR, "analyzer_app/model/food_model.h5")
+        model_path = os.path.join(settings.BASE_DIR, "analyzer_app/model/food_model1.h5")
         model = load_model(model_path, compile=False)  # ✅ FIX
     return model
 
@@ -129,12 +129,15 @@ def predict(request):
                     carbs=nutrition.get("carbs"),
                 )
 
-            return render(request, "index.html", {
-                "result": result,
-                "confidence": f"{confidence*100:.2f}%",
-                "top_predictions": top_predictions,
-                "nutrition": nutrition,
-                "image_url": os.path.join(settings.MEDIA_URL, file_path)
+            return render(request, "result.html", {
+                "image_url":  default_storage.url(file_path),
+                "food_name": predicted_class,
+                "confidence": round(confidence * 100, 2),
+
+                "calories": nutrition.get("calories", 0),
+                "protein": nutrition.get("protein", 0),
+                "fat": nutrition.get("fat", 0),
+                "carbs": nutrition.get("carbs", 0)
             })
 
         except Exception as e:
@@ -192,20 +195,36 @@ def history_view(request):
 # My Profile
 # =======================
 
-from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
+import json
 
 @login_required(login_url='login')
 def profile_view(request):
+
     user = request.user
 
-    # basic stats
     total_scans = FoodHistory.objects.filter(user=user).count()
+
+    # Calorie trend data
+    data = (
+        FoodHistory.objects
+        .filter(user=user)
+        .annotate(date=TruncDate('created_at'))
+        .values('date')
+        .annotate(total_calories=Sum('calories'))
+        .order_by('date')
+    )
+
+    dates = [str(item['date']) for item in data]
+    calories = [item['total_calories'] or 0 for item in data]
 
     return render(request, "profile.html", {
         "user": user,
-        "total_scans": total_scans
+        "total_scans": total_scans,
+        "dates": json.dumps(dates),
+        "calories": json.dumps(calories),
     })
-
 # =======================
 # API (Optional)
 # =======================
@@ -301,42 +320,50 @@ def analyze_image(request):
                 pass
 
 
-# import traceback
+def result(request):
+    context = {
+        "image_url": image_url,  # path to uploaded image
+        "food_name": predicted_label,
+        "confidence": round(confidence * 100, 2),
 
-# def analyze_image(request):
-#     print("🔥 CORRECT ANALYZE_IMAGE RUNNING")
+        "calories": 250,
+        "protein": 10,
+        "fat": 8,
+        "carbs": 30
+    }
 
-#     if request.method != "POST":
-#         return JsonResponse({"error": "Invalid request"})
+    return render(request, "result.html", context)
 
-#     file = request.FILES.get("file")
 
-#     if not file:
-#         return JsonResponse({"error": "No image uploaded"})
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
+import json
 
-#     try:
-#         file_path = default_storage.save(file.name, file)
-#         full_path = os.path.join(settings.MEDIA_ROOT, file_path)
+@login_required(login_url='login')
+def dashboard_view(request):
 
-#         processed_image = preprocess_image(full_path)
-#         if processed_image is None:
-#             return JsonResponse({"error": "Image processing failed"})
+    data = (
+        FoodHistory.objects
+        .filter(user=request.user)
+        .annotate(date=TruncDate('created_at'))
+        .values('date')
+        .annotate(total_calories=Sum('calories'))
+        .order_by('date')
+    )
 
-#         model = get_model()
-#         predictions = model.predict(processed_image)
+    dates = [str(item['date']) for item in data]
+    calories = [item['total_calories'] or 0 for item in data]
 
-#         probs = predictions[0]
+    metrics_text = ""
 
-#         pred_idx = np.argmax(probs)
-#         confidence = float(probs[pred_idx])
-#         predicted_class = CLASS_NAMES[pred_idx]
+    try:
+        with open("static/graphs/metrics.txt", "r") as f:
+            metrics_text = f.read()
+    except:
+        metrics_text = "Metrics not available"
 
-#         return JsonResponse({
-#             "food": predicted_class,
-#             "confidence": round(confidence * 100, 2)
-#         })
-
-#     except Exception as e:
-#         print("🔥 ERROR OCCURRED:")
-#         traceback.print_exc()   # 🔥 THIS IS KEY
-#         return JsonResponse({"error": str(e)})
+    return render(request, "dashboard.html", {
+        "dates": json.dumps(dates),
+        "calories": json.dumps(calories),
+        "metrics": metrics_text
+    })

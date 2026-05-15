@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analysis Result</title>
+
+    <link rel="stylesheet" href="{% static 'header.css' %}">
+    <link rel="stylesheet" href="{% static 'result.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
+</head>
+<body>
+
+    {% include 'header.html' %}
+
+    <div class="result-container">
+
+        <div class="result-card">
+
+            <!-- Left Side -->
+            <div class="image-section">
+
+                <img src="{{ image_url }}"
+                     alt="Food Image"
+                     class="food-image">
+
+            </div>
+
+            <!-- Right Side -->
+           
+
+               
+            <div class="details-section">
+
+                <div class="badge">
+                    AI Prediction
+                </div>
+
+                <h1 class="food-title">
+                    {{ food_name }}
+                </h1>
+
+                <div class="confidence-box">
+                    Confidence: {{ confidence }}%
+                </div>
+
+                <!-- Nutrition Grid -->
+                <div class="nutrition-grid">
+
+                    <div class="nutrition-card calories">
+                        <h3>Calories</h3>
+                        <p>{{ calories }}</p>
+                    </div>
+
+                    <div class="nutrition-card protein">
+                        <h3>Protein</h3>
+                        <p>{{ protein }} g</p>
+                    </div>
+
+                    <div class="nutrition-card fat">
+                        <h3>Fat</h3>
+                        <p>{{ fat }} g</p>
+                    </div>
+
+                    <div class="nutrition-card carbs">
+                        <h3>Carbs</h3>
+                        <p>{{ carbs }} g</p>
+                    </div>
+
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+
+                    <a href="/analyze/" class="btn-primary">
+                        Analyze Another
+                    </a>
+
+                    <a href="/history/" class="btn-secondary">
+                        View History
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

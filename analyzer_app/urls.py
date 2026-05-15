@@ -26,6 +26,7 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('analyze/', views.analyze_page, name='analyze'),
+    path('predict/', views.predict, name='predict'),
     path('about/', views.about, name='about'),
 
     # API
@@ -38,4 +39,6 @@ urlpatterns = [
     
     path('history/', views.history_view, name='history'),
     path('profile/', views.profile_view, name='profile'),
+    
+    path('dashboard/', views.dashboard_view, name='dashboard'),
 ]
