@@ -10,13 +10,13 @@ Food Analyzer is a full-stack web application that uses Deep Learning and Comput
 
 Users can:
 
-* Upload food images
-* Capture food using camera
-* Get AI-based predictions
-* View nutrition details
-* Track food history
-* Analyze calorie trends
-* Access dashboard analytics
+- Upload food images
+- Capture food using camera
+- Get AI-based predictions
+- View nutrition details
+- Track food history
+- Analyze calorie trends
+- Access dashboard analytics
 
 ---
 
@@ -24,48 +24,48 @@ Users can:
 
 ## 🤖 AI Food Classification
 
-* Deep learning model trained using TensorFlow/Keras
-* Supports 15 food categories
-* Upload image or use live camera
-* Displays prediction confidence score
+- Deep learning model trained using TensorFlow/Keras
+- Supports 15 food categories
+- Upload image or use live camera
+- Displays prediction confidence score
 
 ## 🥗 Nutrition Analysis
 
 Displays:
 
-* Calories
-* Protein
-* Fat
-* Carbohydrates
+- Calories
+- Protein
+- Fat
+- Carbohydrates
 
 ## 👤 Authentication System
 
-* User Signup
-* User Login
-* Logout functionality
-* Protected analyze page
+- User Signup
+- User Login
+- Logout functionality
+- Protected analyze page
 
 ## 📊 Dashboard Analytics
 
-* Accuracy graph
-* Loss graph
-* Confusion matrix
-* Classification metrics
-* Calorie trend chart
+- Accuracy graph
+- Loss graph
+- Confusion matrix
+- Classification metrics
+- Calorie trend chart
 
 ## 🕘 History Tracking
 
-* Stores user predictions
-* Displays recent scans
-* Personalized profile statistics
+- Stores user predictions
+- Displays recent scans
+- Personalized profile statistics
 
 ## 🎨 Modern UI
 
-* Responsive design
-* Professional dashboard
-* Interactive charts
-* Styled authentication pages
-* Dynamic result cards
+- Responsive design
+- Professional dashboard
+- Interactive charts
+- Styled authentication pages
+- Dynamic result cards
 
 ---
 
@@ -75,30 +75,30 @@ Displays:
 
 The model is trained on:
 
-* carrot_cake
-* chicken_curry
-* chocolate_cake
-* cupcakes
-* donuts
-* french_fries
-* fried_rice
-* hamburger
-* hot_dog
-* ice_cream
-* pizza
-* samosa
-* spaghetti_bolognese
-* steak
-* sushi
+- carrot_cake
+- chicken_curry
+- chocolate_cake
+- cupcakes
+- donuts
+- french_fries
+- fried_rice
+- hamburger
+- hot_dog
+- ice_cream
+- pizza
+- samosa
+- spaghetti_bolognese
+- steak
+- sushi
 
 ## Model Performance
 
-* Training Accuracy: ~82%
-* Validation Accuracy: ~79%
+- Training Accuracy: ~82%
+- Validation Accuracy: ~79%
 
 ## Model Format
 
-* Saved as `.h5`
+- Saved as `.h5`
 
 ---
 
@@ -106,27 +106,27 @@ The model is trained on:
 
 ## Frontend
 
-* HTML
-* CSS
-* JavaScript
-* Chart.js
+- HTML
+- CSS
+- JavaScript
+- Chart.js
 
 ## Backend
 
-* Django
-* Python
+- Django
+- Python
 
 ## AI / ML
 
-* TensorFlow
-* Keras
-* NumPy
-* Matplotlib
-* Scikit-learn
+- TensorFlow
+- Keras
+- NumPy
+- Matplotlib
+- Scikit-learn
 
 ## Database
 
-* SQLite
+- SQLite
 
 ---
 
@@ -210,12 +210,12 @@ http://127.0.0.1:8000/
 
 # 📈 Dashboard Includes
 
-* Training Accuracy Graph
-* Validation Accuracy Graph
-* Loss Graph
-* Confusion Matrix
-* Classification Report
-* Calorie Trends
+- Training Accuracy Graph
+- Validation Accuracy Graph
+- Loss Graph
+- Confusion Matrix
+- Classification Report
+- Calorie Trends
 
 ---
 
@@ -223,52 +223,52 @@ http://127.0.0.1:8000/
 
 ## Home Page
 
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (85).pngc:\Users\ADMIN\Pictures\Screenshots\Screenshot (85).png
+![Home Page](screenshots/home.png)
 
 ## Analyze Page
 
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (51).png
+![Analyze Page](screenshots/analyze.png)
 
 ## Result Page
 
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (82).png
+![Result Page](screenshots/result.png)
 
 ## Dashboard
 
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (91).png
+![Dashboard Page](screenshots/dashboard.png)
 
 ## Profile Page
 
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (88).png
+![Profile Page](screenshots/profile.png)
 
 ## Login Page
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (86).png
+
+![Login Page](screenshots/login.png)
 
 ## Sign Up Page
 
-c:\Users\ADMIN\Pictures\Screenshots\Screenshot (87).png
----
+## ![Sign Up Page](screenshots/signup.png)
 
 # 🔒 Authentication Features
 
-* Login Validation
-* Signup Validation
-* Secure Routes
-* Session Management
-* User-specific History
+- Login Validation
+- Signup Validation
+- Secure Routes
+- Session Management
+- User-specific History
 
 ---
 
 # 🧪 Future Improvements
 
-* Add more food classes
-* Improve model accuracy
-* Add dark mode
-* Deploy online
-* Add BMI calculator
-* Add food recommendations
-* Add Grad-CAM visualization
-* Add PDF nutrition report
+- Add more food classes
+- Improve model accuracy
+- Add dark mode
+- Deploy online
+- Add BMI calculator
+- Add food recommendations
+- Add Grad-CAM visualization
+- Add PDF nutrition report
 
 ---
 
@@ -276,19 +276,19 @@ c:\Users\ADMIN\Pictures\Screenshots\Screenshot (87).png
 
 This project helped in understanding:
 
-* Deep Learning
-* CNN Image Classification
-* Django Full-Stack Development
-* Database Integration
-* REST/API Communication
-* Frontend UI Design
-* Model Evaluation Techniques
+- Deep Learning
+- CNN Image Classification
+- Django Full-Stack Development
+- Database Integration
+- REST/API Communication
+- Frontend UI Design
+- Model Evaluation Techniques
 
 ---
 
 # 👨‍💻 Author
 
-Surajsingh Dhiraj Ninad Jayesh 
+Surajsingh Dhiraj Ninad Jayesh
 
 Final Year AI/ML Project
 
@@ -300,8 +300,8 @@ Food Analyzer successfully combines Artificial Intelligence and Web Development 
 
 The project demonstrates practical implementation of:
 
-* Deep Learning
-* Computer Vision
-* Django Backend Development
-* Interactive Frontend Design
-* AI Integration in Web Applications
+- Deep Learning
+- Computer Vision
+- Django Backend Development
+- Interactive Frontend Design
+- AI Integration in Web Applications
