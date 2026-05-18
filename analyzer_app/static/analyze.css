@@ -197,82 +197,196 @@ footer {
 
 }
 
-.result-content-vertical{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
-    padding:30px;
+.result-card{
+    margin-top:30px;
+    background:#fff;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    text-align:center;
+}
+
+.result-image-box{
+    margin-bottom:20px;
 }
 
 .result-image-box img{
-    width:280px;
-    height:280px;
+    width:220px;
+    height:220px;
     object-fit:cover;
-    border-radius:24px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.15);
+    border-radius:20px;
 }
 
-#foodTitle{
-    font-size:52px;
-    font-weight:700;
-    color:#111827;
-    margin:0;
-}
-
-.confidence-badge{
-    background:#0f172a;
-    color:white;
-    padding:14px 28px;
-    border-radius:14px;
-    font-size:22px;
+.confidence-box{
+    margin-top:12px;
+    font-size:18px;
     font-weight:600;
 }
 
-.result-image-box img{
-    width:140px;
-    height:140px;
+.category-badge{
+    margin-top:15px;
+}
+
+.category-badge span{
+    background:#ff6b35;
+    color:white;
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.health-score{
+    margin-top:20px;
+    font-size:22px;
+    font-weight:bold;
+    color:#27ae60;
 }
 
 .nutrition-grid{
     display:grid;
-    grid-template-columns:repeat(2, 150px);
-    gap:18px;
-    margin-top:15px;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-top:25px;
 }
 
 .nutrition-card{
-    height:150px;
-    border-radius:20px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    font-weight:700;
-    box-shadow:0 8px 20px rgba(0,0,0,0.12);
+    background:#f8f8f8;
+    border-radius:15px;
+    padding:18px;
 }
 
-.nutrition-card h3{
-    font-size:24px;
-    margin-bottom:14px;
+.nutrition-card h4{
+    margin-bottom:10px;
+    color:#666;
 }
 
 .nutrition-card p{
-    font-size:34px;
-}
-.calories{
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-}
-
-.protein{
-    background:linear-gradient(135deg,#059669,#10b981);
+    font-size:22px;
+    font-weight:bold;
+    color:#ff6b35;
 }
 
-.fat{
-    background:linear-gradient(135deg,#dc2626,#ef4444);
+.insight-box{
+    margin-top:30px;
+    text-align:left;
 }
 
-.carbs{
-    background:linear-gradient(135deg,#d97706,#f59e0b);
+.insight-box ul{
+    padding-left:20px;
+    margin-top:10px;
+}
+
+.insight-box li{
+    margin-bottom:10px;
+}
+
+.recommend-box{
+    margin-top:25px;
+    background:#fff4ed;
+    padding:20px;
+    border-radius:15px;
+}
+
+.top-predictions{
+    margin-top:30px;
+}
+
+.prediction-row{
+    display:flex;
+    justify-content:space-between;
+    background:#f5f5f5;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.loader{
+    width:55px;
+    height:55px;
+    border:5px solid #eee;
+    border-top:5px solid #ff6b35;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:20px auto;
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+
+.extra-card{
+    background:#ffffff;
+    padding:20px;
+    border-radius:16px;
+    margin-top:20px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.extra-card h3{
+    margin-bottom:10px;
+    color:#1e3a8a;
+}
+
+.extra-card p{
+    font-size:28px;
+    font-weight:700;
+}
+
+.recommendation-box,
+.insights-box,
+.top-predictions{
+    background:#fff;
+    padding:20px;
+    margin-top:20px;
+    border-radius:16px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.recommendation-box h3,
+.insights-box h3,
+.top-predictions h3{
+    margin-bottom:15px;
+    color:#2563eb;
+}
+
+#insightsList{
+    padding-left:20px;
+}
+
+#insightsList li{
+    margin-bottom:10px;
+}
+
+.prediction-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
+}
+
+/* LOADER */
+
+.loader{
+    width:60px;
+    height:60px;
+    border:6px solid #ddd;
+    border-top:6px solid #2563eb;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:25px auto;
+}
+
+.hidden{
+    display:none;
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
 }

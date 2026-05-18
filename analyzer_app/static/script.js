@@ -1,290 +1,663 @@
 console.log("Script loaded");
 
 document.addEventListener("DOMContentLoaded", function () {
+
   /* ---------- ELEMENTS ---------- */
+
   const uploadForm = document.getElementById("uploadForm");
-  
+
+  // Stop script on pages where analyze form doesn't exist
+  if (!uploadForm) return;
+
   const resultDiv = document.getElementById("result");
 
+  const resultImage = document.getElementById("resultImage");
+
   const fileInput = document.querySelector('input[type="file"]');
+
   const preview = document.getElementById("preview");
 
   const cameraBtn = document.getElementById("cameraBtn");
+
   const video = document.getElementById("cameraPreview");
+
   const captureBtn = document.getElementById("captureBtn");
+
   const canvas = document.getElementById("cameraCanvas");
 
   const manualForm = document.getElementById("manualForm");
+
   const manualResult = document.getElementById("manualResult");
+
   const manualText = document.getElementById("manualText");
 
+  const loader = document.getElementById("loader");
+
   let stream = null;
+
   let isProcessing = false;
 
   /* ---------- CSRF ---------- */
+
   function getCSRFToken() {
-    return document.querySelector("[name=csrfmiddlewaretoken]").value;
+    const token = document.querySelector(
+      "[name=csrfmiddlewaretoken]"
+    );
+
+    return token ? token.value : "";
   }
 
   /* ---------- UI HELPERS ---------- */
 
-function showLoading(msg) {
+  function showLoading() {
 
-  resultDiv.classList.remove("hidden");
+    if (resultDiv) {
+      resultDiv.classList.remove("hidden");
+    }
 
-  document.getElementById("foodTitle").innerText =
-    "Analyzing...";
+    if (loader) {
+      loader.classList.remove("hidden");
+    }
 
-  document.getElementById("confidenceText").innerText =
-    "...";
+    const foodTitle =
+      document.getElementById("foodTitle");
 
-  document.getElementById("caloriesText").innerText =
-    "...";
-
-  document.getElementById("proteinText").innerText =
-    "...";
-
-  document.getElementById("fatText").innerText =
-    "...";
-
-  document.getElementById("carbsText").innerText =
-    "...";
-}
-
-function showError(msg) {
-
-  resultDiv.classList.remove("hidden");
-
-  document.getElementById("foodTitle").innerText =
-    "Error";
-
-  document.getElementById("confidenceText").innerText =
-    "0%";
-
-  document.getElementById("caloriesText").innerText =
-    msg;
-
-  document.getElementById("proteinText").innerText =
-    "-";
-
-  document.getElementById("fatText").innerText =
-    "-";
-
-  document.getElementById("carbsText").innerText =
-    "-";
-}
-
-function showResult(data) {
-
-  resultDiv.classList.remove("hidden");
-
-  if (data.error) {
-    showError(data.error);
-    return;
+    if (foodTitle) {
+      foodTitle.innerText = "Analyzing...";
+    }
   }
 
-  document.getElementById("foodTitle").innerText =
-    data.food;
+  function showError(msg) {
 
-  document.getElementById("confidenceText").innerText =
-    data.confidence + "%";
-
-  document.getElementById("caloriesText").innerText =
-    data.calories ?? "N/A";
-
-  document.getElementById("proteinText").innerText =
-    (data.protein ?? "N/A") + " g";
-
-  document.getElementById("fatText").innerText =
-    (data.fat ?? "N/A") + " g";
-
-  document.getElementById("carbsText").innerText =
-    (data.carbs ?? "N/A") + " g";
-}
-
-  /* ---------- IMAGE UPLOAD ---------- */
-  uploadForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (isProcessing) return;
-    isProcessing = true;
-
-    showLoading("Analyzing image...");
-
-    try {
-      const formData = new FormData(uploadForm);
-
-      const file = fileInput.files[0];
-
-if(file){
-    document.getElementById("resultImage").src =
-        URL.createObjectURL(file);
-}
-
-      const res = await fetch("/analyze/do/", {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": getCSRFToken(),
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-      showResult(data);
-    } catch (err) {
-      console.error(err);
-      showError("Upload failed.");
-    } finally {
-      isProcessing = false;
+    if (loader) {
+      loader.classList.add("hidden");
     }
-  });
 
-  /* ---------- IMAGE PREVIEW ---------- */
-  fileInput.addEventListener("change", () => {
-    const file = fileInput.files[0];
+    if (resultDiv) {
+      resultDiv.classList.remove("hidden");
+    }
 
-    if (!file) {
-      preview.classList.add("hidden");
+    const foodTitle =
+      document.getElementById("foodTitle");
+
+    const recommendationText =
+      document.getElementById("recommendationText");
+
+    if (foodTitle) {
+      foodTitle.innerText = "Error";
+    }
+
+    if (recommendationText) {
+      recommendationText.innerText = msg;
+    }
+  }
+
+  function showResult(data) {
+
+    if (loader) {
+      loader.classList.add("hidden");
+    }
+
+    if (resultDiv) {
+      resultDiv.classList.remove("hidden");
+    }
+
+    if (data.error) {
+      showError(data.error);
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      preview.src = e.target.result;
-      preview.classList.remove("hidden");
-    };
-    reader.readAsDataURL(file);
-  });
+    const foodTitle =
+      document.getElementById("foodTitle");
 
-  /* ---------- CAMERA OPEN ---------- */
-  cameraBtn.addEventListener("click", async () => {
-    try {
-      stopCamera();
+    const confidenceText =
+      document.getElementById("confidenceText");
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-      });
+    const categoryText =
+      document.getElementById("categoryText");
 
-      video.srcObject = stream;
+    const healthScore =
+      document.getElementById("healthScore");
 
-      video.classList.remove("hidden");
-      captureBtn.classList.remove("hidden");
-    } catch (err) {
-      console.error(err);
-      alert("Camera not accessible");
+    const caloriesText =
+      document.getElementById("caloriesText");
+
+    const proteinText =
+      document.getElementById("proteinText");
+
+    const fatText =
+      document.getElementById("fatText");
+
+    const carbsText =
+      document.getElementById("carbsText");
+
+    const recommendationText =
+      document.getElementById("recommendationText");
+
+    if (foodTitle) {
+      foodTitle.innerText = data.food;
     }
-  });
 
-  /* ---------- CAMERA CAPTURE ---------- */
-  captureBtn.addEventListener("click", () => {
-    if (isProcessing) return;
+    if (confidenceText) {
+      confidenceText.innerText =
+        data.confidence + "%";
+    }
 
-    isProcessing = true;
-    captureBtn.disabled = true;
+    if (categoryText) {
+      categoryText.innerText =
+        data.category || "Normal";
+    }
 
-    const ctx = canvas.getContext("2d");
+    if (healthScore) {
+      healthScore.innerText =
+        data.health_score || "80";
+    }
 
-    canvas.width = 224;
-    canvas.height = 224;
+    if (caloriesText) {
+      caloriesText.innerText =
+        data.calories ?? "N/A";
+    }
 
-    ctx.drawImage(video, 0, 0, 224, 224);
+    if (proteinText) {
+      proteinText.innerText =
+        (data.protein ?? "N/A") + " g";
+    }
 
-    canvas.toBlob(async (blob) => {
-      document.getElementById("resultImage").src =
-    URL.createObjectURL(blob);
-      if (!blob) {
-        showError("Capture failed");
-        resetCamera();
-        return;
-      }
+    if (fatText) {
+      fatText.innerText =
+        (data.fat ?? "N/A") + " g";
+    }
 
-      showLoading("Analyzing captured image...");
+    if (carbsText) {
+      carbsText.innerText =
+        (data.carbs ?? "N/A") + " g";
+    }
+
+    if (recommendationText) {
+      recommendationText.innerText =
+        data.recommendation ||
+        "Eat in moderation and stay hydrated.";
+    }
+
+    /* ---------- AI INSIGHTS ---------- */
+
+    const insightsList =
+      document.getElementById("insightsList");
+
+    if (
+      insightsList &&
+      data.insights
+    ) {
+
+      insightsList.innerHTML = "";
+
+      data.insights.forEach(item => {
+
+        insightsList.innerHTML += `
+          <li>${item}</li>
+        `;
+      });
+    }
+
+    /* ---------- TOP PREDICTIONS ---------- */
+
+    const topPredictions =
+      document.getElementById("topPredictions");
+
+    if (
+      topPredictions &&
+      data.top_predictions
+    ) {
+
+      topPredictions.innerHTML = "";
+
+      data.top_predictions.forEach(item => {
+
+        topPredictions.innerHTML += `
+
+          <div class="prediction-row">
+
+            <span>${item.food}</span>
+
+            <span>${item.confidence}%</span>
+
+          </div>
+        `;
+      });
+    }
+  }
+
+  /* ---------- IMAGE UPLOAD ---------- */
+
+  uploadForm.addEventListener(
+    "submit",
+    async (e) => {
+
+      e.preventDefault();
+
+      if (isProcessing) return;
+
+      isProcessing = true;
+
+      showLoading();
 
       try {
-        const formData = new FormData();
-        formData.append("file", blob, "camera.jpg");
 
-        const res = await fetch("/analyze/do/", {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": getCSRFToken(),
-          },
-          body: formData,
-        });
+        const formData =
+          new FormData(uploadForm);
 
-        const data = await res.json();
+        const file =
+          fileInput.files[0];
+
+        if (file && resultImage) {
+
+          resultImage.src =
+            URL.createObjectURL(file);
+
+          resultImage.classList.remove(
+            "hidden"
+          );
+        }
+
+        const res = await fetch(
+          "/analyze/do/",
+          {
+            method: "POST",
+
+            headers: {
+              "X-CSRFToken":
+                getCSRFToken(),
+            },
+
+            body: formData,
+          }
+        );
+
+        const data =
+          await res.json();
+
         showResult(data);
-      } catch (err) {
-        console.error(err);
-        showError("Camera failed.");
-      }
 
-      stopCamera();
-      resetCamera();
-    }, "image/jpeg");
-  });
+      } catch (err) {
+
+        console.error(err);
+
+        showError(
+          "Upload failed."
+        );
+
+      } finally {
+
+        isProcessing = false;
+      }
+    }
+  );
+
+  /* ---------- IMAGE PREVIEW ---------- */
+
+  if (fileInput) {
+
+    fileInput.addEventListener(
+      "change",
+      () => {
+
+        const file =
+          fileInput.files[0];
+
+        if (!file) {
+
+          if (preview) {
+            preview.classList.add(
+              "hidden"
+            );
+          }
+
+          return;
+        }
+
+        const reader =
+          new FileReader();
+
+        reader.onload = (e) => {
+
+          if (preview) {
+
+            preview.src =
+              e.target.result;
+
+            preview.classList.remove(
+              "hidden"
+            );
+          }
+        };
+
+        reader.readAsDataURL(file);
+      }
+    );
+  }
+
+  /* ---------- CAMERA OPEN ---------- */
+
+  if (cameraBtn) {
+
+    cameraBtn.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          stopCamera();
+
+          stream =
+            await navigator.mediaDevices.getUserMedia(
+              {
+                video: {
+                  facingMode:
+                    "environment",
+                },
+              }
+            );
+
+          video.srcObject =
+            stream;
+
+          video.classList.remove(
+            "hidden"
+          );
+
+          captureBtn.classList.remove(
+            "hidden"
+          );
+
+        } catch (err) {
+
+          console.error(err);
+
+          alert(
+            "Camera not accessible"
+          );
+        }
+      }
+    );
+  }
+
+  /* ---------- CAMERA CAPTURE ---------- */
+
+  if (captureBtn) {
+
+    captureBtn.addEventListener(
+      "click",
+      () => {
+
+        if (isProcessing)
+          return;
+
+        isProcessing = true;
+
+        captureBtn.disabled = true;
+
+        const ctx =
+          canvas.getContext("2d");
+
+        canvas.width = 224;
+
+        canvas.height = 224;
+
+        ctx.drawImage(
+          video,
+          0,
+          0,
+          224,
+          224
+        );
+
+        canvas.toBlob(
+          async (blob) => {
+
+            if (!blob) {
+
+              showError(
+                "Capture failed"
+              );
+
+              resetCamera();
+
+              return;
+            }
+
+            if (resultImage) {
+
+              resultImage.src =
+                URL.createObjectURL(
+                  blob
+                );
+
+              resultImage.classList.remove(
+                "hidden"
+              );
+            }
+
+            showLoading();
+
+            try {
+
+              const formData =
+                new FormData();
+
+              formData.append(
+                "file",
+                blob,
+                "camera.jpg"
+              );
+
+              const res =
+                await fetch(
+                  "/analyze/do/",
+                  {
+                    method:
+                      "POST",
+
+                    headers: {
+                      "X-CSRFToken":
+                        getCSRFToken(),
+                    },
+
+                    body:
+                      formData,
+                  }
+                );
+
+              const data =
+                await res.json();
+
+              showResult(data);
+
+            } catch (err) {
+
+              console.error(
+                err
+              );
+
+              showError(
+                "Camera failed."
+              );
+            }
+
+            stopCamera();
+
+            resetCamera();
+
+          },
+          "image/jpeg"
+        );
+      }
+    );
+  }
+
+  /* ---------- STOP CAMERA ---------- */
 
   function stopCamera() {
+
     if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
+
+      stream
+        .getTracks()
+        .forEach(track =>
+          track.stop()
+        );
+
       stream = null;
     }
   }
 
+  /* ---------- RESET CAMERA ---------- */
+
   function resetCamera() {
-    video.classList.add("hidden");
-    captureBtn.classList.add("hidden");
-    captureBtn.disabled = false;
+
+    if (video) {
+      video.classList.add(
+        "hidden"
+      );
+    }
+
+    if (captureBtn) {
+
+      captureBtn.classList.add(
+        "hidden"
+      );
+
+      captureBtn.disabled = false;
+    }
+
     isProcessing = false;
   }
 
   /* ---------- MANUAL ENTRY ---------- */
-  manualForm.addEventListener("submit", (e) => {
-    e.preventDefault();
 
-    const food = document.getElementById("foodName").value;
-    const qty = parseFloat(document.getElementById("foodQty").value);
+  if (manualForm) {
 
-    const calories = qty * 1.5;
+    manualForm.addEventListener(
+      "submit",
+      (e) => {
 
-    manualText.innerHTML = `
-      <strong>Food:</strong> ${food}<br>
-      <strong>Quantity:</strong> ${qty} g<br>
-      <strong>Estimated Calories:</strong> ${Math.round(calories)} kcal
-    `;
+        e.preventDefault();
 
-    manualResult.classList.remove("hidden");
-  });
+        const food =
+          document.getElementById(
+            "foodName"
+          ).value;
+
+        const qty =
+          parseFloat(
+            document.getElementById(
+              "foodQty"
+            ).value
+          );
+
+        const calories =
+          qty * 1.5;
+
+        manualText.innerHTML = `
+
+          <strong>Food:</strong> ${food}<br>
+
+          <strong>Quantity:</strong> ${qty} g<br>
+
+          <strong>Estimated Calories:</strong>
+          ${Math.round(calories)} kcal
+        `;
+
+        manualResult.classList.remove(
+          "hidden"
+        );
+      }
+    );
+  }
 });
+
+/* ---------- PROFILE DROPDOWN ---------- */
 
 function toggleDropdown() {
-    const menu = document.getElementById("dropdownMenu");
-    menu.classList.toggle("show");
+
+  const menu =
+    document.getElementById(
+      "dropdownMenu"
+    );
+
+  if (menu) {
+    menu.classList.toggle(
+      "show"
+    );
+  }
 }
 
-/* Close dropdown when clicking outside */
-window.addEventListener("click", function (e) {
-    const dropdown = document.querySelector(".profile-dropdown");
+window.addEventListener(
+  "click",
+  function (e) {
 
-    if (!dropdown.contains(e.target)) {
-        const menu = document.getElementById("dropdownMenu");
-        if (menu) menu.classList.remove("show");
+    const dropdown =
+      document.querySelector(
+        ".profile-dropdown"
+      );
+
+    if (
+      dropdown &&
+      !dropdown.contains(
+        e.target
+      )
+    ) {
+
+      const menu =
+        document.getElementById(
+          "dropdownMenu"
+        );
+
+      if (menu) {
+        menu.classList.remove(
+          "show"
+        );
+      }
     }
-});
+  }
+);
 
-const profileBtn = document.getElementById("profileBtn");
-const dropdownMenu = document.getElementById("dropdownMenu");
+const profileBtn =
+  document.getElementById(
+    "profileBtn"
+  );
+
+const dropdownMenu =
+  document.getElementById(
+    "dropdownMenu"
+  );
 
 if (profileBtn) {
-    profileBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle("show");
-    });
+
+  profileBtn.addEventListener(
+    "click",
+    function (e) {
+
+      e.stopPropagation();
+
+      if (dropdownMenu) {
+
+        dropdownMenu.classList.toggle(
+          "show"
+        );
+      }
+    }
+  );
 }
 
-/* Close when clicking outside */
-document.addEventListener("click", function () {
+document.addEventListener(
+  "click",
+  function () {
+
     if (dropdownMenu) {
-        dropdownMenu.classList.remove("show");
+
+      dropdownMenu.classList.remove(
+        "show"
+      );
     }
-});
+  }
+);

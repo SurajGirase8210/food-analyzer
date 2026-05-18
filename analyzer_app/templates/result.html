@@ -1,95 +1,115 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Analysis Result</title>
 
-    <link rel="stylesheet" href="{% static 'header.css' %}">
-    <link rel="stylesheet" href="{% static 'result.css' %}">
-    <link rel="stylesheet" href="{% static 'responsive.css' %}">
-</head>
-<body>
-
+    <link rel="stylesheet" href="{% static 'header.css' %}" />
+    <link rel="stylesheet" href="{% static 'result.css' %}" />
+    <link rel="stylesheet" href="{% static 'responsive.css' %}" />
+  </head>
+  <body>
     {% include 'header.html' %}
 
-    <div class="result-container">
+   <!-- RESULT -->
+<div id="result" class="result-card hidden">
 
-        <div class="result-card">
+  <!-- Loader -->
+  <div id="loader" class="loader hidden"></div>
 
-            <!-- Left Side -->
-            <div class="image-section">
+  <!-- Uploaded Image -->
+  <div class="result-image-box">
+    <img id="resultImage" src="" alt="Food Image">
+  </div>
 
-                <img src="{{ image_url }}"
-                     alt="Food Image"
-                     class="food-image">
+  <!-- Food Name -->
+  <h2 id="foodTitle">Food Name</h2>
 
-            </div>
+  <!-- Confidence -->
+  <div class="confidence-box">
+    Confidence:
+    <span id="confidenceText">0%</span>
+  </div>
 
-            <!-- Right Side -->
-           
+  <!-- Calorie Category -->
+  <div class="category-badge">
+    <span id="categoryText">Medium Calorie</span>
+  </div>
 
-               
-            <div class="details-section">
+  <!-- Health Score -->
+  <div class="health-score">
+    Health Score:
+    <span id="healthScore">0</span>/10
+  </div>
 
-                <div class="badge">
-                    AI Prediction
-                </div>
+  <!-- Nutrition Grid -->
+  <div class="nutrition-grid">
 
-                <h1 class="food-title">
-                    {{ food_name }}
-                </h1>
-
-                <div class="confidence-box">
-                    Confidence: {{ confidence }}%
-                </div>
-
-                <!-- Nutrition Grid -->
-                <div class="nutrition-grid">
-
-                    <div class="nutrition-card calories">
-                        <h3>Calories</h3>
-                        <p>{{ calories }}</p>
-                    </div>
-
-                    <div class="nutrition-card protein">
-                        <h3>Protein</h3>
-                        <p>{{ protein }} g</p>
-                    </div>
-
-                    <div class="nutrition-card fat">
-                        <h3>Fat</h3>
-                        <p>{{ fat }} g</p>
-                    </div>
-
-                    <div class="nutrition-card carbs">
-                        <h3>Carbs</h3>
-                        <p>{{ carbs }} g</p>
-                    </div>
-
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="button-group">
-
-                    <a href="/analyze/" class="btn-primary">
-                        Analyze Another
-                    </a>
-
-                    <a href="/history/" class="btn-secondary">
-                        View History
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
+    <div class="nutrition-card">
+      <h4>Calories</h4>
+      <p id="caloriesText">0</p>
     </div>
 
-</body>
+    <div class="nutrition-card">
+      <h4>Protein</h4>
+      <p id="proteinText">0g</p>
+    </div>
+
+    <div class="nutrition-card">
+      <h4>Fat</h4>
+      <p id="fatText">0g</p>
+    </div>
+
+    <div class="nutrition-card">
+      <h4>Carbs</h4>
+      <p id="carbsText">0g</p>
+    </div>
+
+  </div>
+
+  <!-- AI Insights -->
+  <div class="insight-box">
+
+    <h3>AI Insights</h3>
+
+    <ul id="insightsList"></ul>
+
+  </div>
+
+  <!-- Recommendation -->
+  <div class="recommend-box">
+
+    <h3>Recommendation</h3>
+
+    <p id="recommendationText"></p>
+
+  </div>
+
+  <!-- Top Predictions -->
+  <div class="top-predictions">
+
+    <h3>Top Predictions</h3>
+
+    <div id="topPredictions"></div>
+
+  </div>
+
+</div>
+
+          
+
+          <!-- Action Buttons -->
+          <div class="button-group">
+            <a href="/analyze/" class="btn-primary"> Analyze Another </a>
+
+            <a href="/history/" class="btn-secondary"> View History </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

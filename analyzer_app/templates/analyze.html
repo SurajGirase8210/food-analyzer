@@ -64,55 +64,85 @@
         <hr />
 
         <div id="result" class="result-card hidden">
+          <div class="result-header">
+            <h2>AI Prediction Result</h2>
+          </div>
 
-    <div class="result-header">
-        <h2>AI Prediction Result</h2>
-    </div>
+          <div class="result-content-vertical">
+            <!-- IMAGE -->
+            <div class="result-image-box">
+              <img id="resultImage" src="" alt="Food Image" />
+            </div>
 
-    <div class="result-content-vertical">
+            <!-- FOOD NAME -->
+            <h1 id="foodTitle">Food Name</h1>
 
-        <!-- IMAGE -->
-        <div class="result-image-box">
-            <img id="resultImage" src="" alt="Food Image">
-        </div>
+            <!-- CONFIDENCE -->
+            <div class="confidence-badge">
+              Confidence:
+              <span id="confidenceText">0%</span>
+            </div>
 
-        <!-- FOOD NAME -->
-        <h1 id="foodTitle">Food Name</h1>
-
-        <!-- CONFIDENCE -->
-        <div class="confidence-badge">
-            Confidence:
-            <span id="confidenceText">0%</span>
-        </div>
-
-        <!-- NUTRITION GRID -->
-        <div class="nutrition-grid">
-
-            <div class="nutrition-card calories">
+            <!-- NUTRITION GRID -->
+            <div class="nutrition-grid">
+              <div class="nutrition-card calories">
                 <h3>Calories</h3>
                 <p id="caloriesText">0</p>
-            </div>
+              </div>
 
-            <div class="nutrition-card protein">
+              <div class="nutrition-card protein">
                 <h3>Protein</h3>
                 <p id="proteinText">0g</p>
-            </div>
+              </div>
 
-            <div class="nutrition-card fat">
+              <div class="nutrition-card fat">
                 <h3>Fat</h3>
                 <p id="fatText">0g</p>
-            </div>
+              </div>
 
-            <div class="nutrition-card carbs">
+              <div class="nutrition-card carbs">
                 <h3>Carbs</h3>
                 <p id="carbsText">0g</p>
+              </div>
+            </div>
+            <!-- HEALTH SCORE -->
+            <div class="extra-card">
+              <h3>Health Score</h3>
+              <p id="healthScore">0</p>
             </div>
 
+            <!-- CATEGORY -->
+            <div class="extra-card">
+              <h3>Calorie Category</h3>
+              <p id="categoryText">-</p>
+            </div>
+
+            <!-- RECOMMENDATION -->
+            <div class="recommendation-box">
+              <h3>Food Recommendation</h3>
+              <p id="recommendationText">Recommendation will appear here</p>
+            </div>
+
+            <!-- AI INSIGHTS -->
+            <div class="insights-box">
+              <h3>AI Insights</h3>
+
+              <ul id="insightsList">
+                <li>Insights will appear here</li>
+              </ul>
+            </div>
+
+            <!-- TOP PREDICTIONS -->
+            <div class="top-predictions">
+              <h3>Top Predictions</h3>
+
+              <div id="topPredictions"></div>
+            </div>
+
+            <!-- LOADER -->
+            <div id="loader" class="loader hidden"></div>
+          </div>
         </div>
-
-    </div>
-
-</div>
       </div>
     </main>
 
