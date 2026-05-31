@@ -13,3 +13,19 @@ class FoodHistory(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.food_name}"
+    
+class UserProfile(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    height = models.FloatField(null=True, blank=True)
+
+    weight = models.FloatField(null=True, blank=True)
+
+    age = models.IntegerField(null=True, blank=True)
+
+    gender = models.CharField(max_length=10, blank=True)
+
+    bmi = models.FloatField(null=True, blank=True)
+
+    bmi_category = models.CharField(max_length=30, blank=True)

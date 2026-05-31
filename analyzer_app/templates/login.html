@@ -29,12 +29,26 @@
           {% csrf_token %}
 
           <input type="text" name="username" placeholder="Username" required />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
+          <div class="password-box">
+            <input
+              type="password"
+              name="password"
+              id="loginPassword"
+              placeholder="Password"
+              required
+            />
+
+            <span
+              class="toggle-password"
+              onclick="togglePassword('loginPassword', this)"
+            >
+              Show
+            </span>
+          </div>
+
+          <div class="forgot-password">
+            <a href="{% url 'password_reset' %}"> Forgot Password? </a>
+          </div>
 
           <button type="submit">Login</button>
         </form>
@@ -48,5 +62,21 @@
     <footer>
       <p>© 2025 Food Analyzer Project</p>
     </footer>
+
+    <script>
+      function togglePassword(id, element) {
+        const input = document.getElementById(id);
+
+        if (input.type === "password") {
+          input.type = "text";
+
+          element.innerText = "Hide";
+        } else {
+          input.type = "password";
+
+          element.innerText = "Show";
+        }
+      }
+    </script>
   </body>
 </html>

@@ -1,48 +1,96 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>My Profile | Food Analyzer</title>
 
-    <link rel="stylesheet" href="{% static 'header.css' %}">
-    <link rel="stylesheet" href="{% static 'analyze.css' %}">
-    <link rel="stylesheet" href="{% static 'responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'auth.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'header.css' %}" />
+    <link rel="stylesheet" href="{% static 'analyze.css' %}" />
+    <link rel="stylesheet" href="{% static 'responsive.css' %}" />
+    <link rel="stylesheet" href="{% static 'auth.css' %}" />
+  </head>
 
-<body>
+  <body>
+    {% include 'header.html' %}
 
-{% include 'header.html' %}
-
-<main>
-    <div class="card">
-
+    <main>
+      <div class="card">
         <h2>👤 My Profile</h2>
         <p>Welcome, {{ user.username }}</p>
 
-        <hr>
+        <hr />
 
         <div class="profile-info">
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Total Scans:</strong> {{ total_scans }}</p>
-            <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+          <p><strong>Username:</strong> {{ user.username }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Total Scans:</strong> {{ total_scans }}</p>
+          <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
         </div>
 
-        <hr>
+        <hr />
 
-        <div style="margin-top: 20px;">
-            <a href="{% url 'history' %}" class="btn signup-btn">View My History</a>
+        <div class="profile-card">
+          <h2>BMI Information</h2>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <input
+              type="number"
+              step="0.1"
+              name="height"
+              placeholder="Height (cm)"
+              value="{{ profile.height }}"
+              required
+            />
+
+            <input
+              type="number"
+              step="0.1"
+              name="weight"
+              placeholder="Weight (kg)"
+              value="{{ profile.weight }}"
+              required
+            />
+
+            <input
+              type="number"
+              name="age"
+              placeholder="Age"
+              value="{{ profile.age }}"
+            />
+
+            <select name="gender">
+              <option value="">Select Gender</option>
+
+              <option value="Male">Male</option>
+
+              <option value="Female">Female</option>
+            </select>
+
+            <button type="submit">Save BMI Details</button>
+          </form>
+
+          <div class="bmi-display">
+            <h3>Your BMI: {{ profile.bmi }}</h3>
+
+            <p>{{ profile.bmi_category }}</p>
+          </div>
         </div>
 
-    </div>
-</main>
+        <div style="margin-top: 20px">
+          <a href="{% url 'history' %}" class="btn signup-btn"
+            >View My History</a
+          >
+        </div>
+      </div>
+    </main>
 
-<footer>
-    <p>© 2025 Food Analyzer Project</p>
-</footer>
-  <script src="{% static 'script.js' %}"></script>
-</body>
+    <footer>
+      <p>© 2025 Food Analyzer Project</p>
+    </footer>
+    <script src="{% static 'script.js' %}"></script>
+  </body>
 </html>

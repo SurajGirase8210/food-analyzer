@@ -151,3 +151,150 @@ body {
         transform:translateY(0);
     }
 }
+/* BMI SECTION */
+
+.profile-card{
+    background:#ffffff;
+    padding:30px;
+    border-radius:22px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    margin-top:30px;
+}
+
+.profile-card h2{
+    font-size:28px;
+    margin-bottom:20px;
+    color:#2563eb;
+}
+
+/* FORM */
+
+.profile-card form{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+/* INPUTS */
+
+.profile-card input,
+.profile-card select{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #ddd;
+    border-radius:14px;
+    font-size:16px;
+    outline:none;
+    transition:0.3s;
+}
+
+.profile-card input:focus,
+.profile-card select:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+}
+
+/* BUTTON */
+
+.profile-card button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.profile-card button:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+/* BMI DISPLAY */
+
+.bmi-display{
+    margin-top:25px;
+    background:#f8fafc;
+    padding:22px;
+    border-radius:18px;
+    text-align:center;
+}
+
+.bmi-display h3{
+    font-size:30px;
+    color:#111827;
+    margin-bottom:10px;
+}
+
+.bmi-display p{
+    font-size:20px;
+    font-weight:600;
+    color:#16a34a;
+}
+
+/* PROFILE GRID */
+
+.profile-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
+
+    .profile-card{
+        padding:20px;
+    }
+
+    .bmi-display h3{
+        font-size:24px;
+    }
+}
+
+
+.auth-error{
+
+    background:#ffe5e5;
+
+    color:#d63031;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    margin-bottom:15px;
+
+    font-weight:600;
+
+    text-align:center;
+}
+
+.forgot-password{
+
+    margin-top:10px;
+
+    text-align:right;
+}
+
+.forgot-password a{
+
+    color:#2563eb;
+
+    text-decoration:none;
+
+    font-size:14px;
+}
+
+.forgot-password a:hover{
+
+    text-decoration:underline;
+}

@@ -3,153 +3,201 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analyze Food | Food Analyzer</title>
 
-    <!-- CSS (Correct Order) -->
-    <link rel="stylesheet" href="{% static 'header.css' %}" />
-    <link rel="stylesheet" href="{% static 'analyze.css' %}" />
-    <link rel="stylesheet" href="{% static 'responsive.css' %}" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analyze Food | Food Analyzer</title>
 
-  <body>
-    {% include 'header.html' %}
+  <!-- CSS (Correct Order) -->
+  <link rel="stylesheet" href="{% static 'header.css' %}" />
+  <link rel="stylesheet" href="{% static 'analyze.css' %}" />
+  <link rel="stylesheet" href="{% static 'responsive.css' %}" />
+</head>
 
-    <main>
-      <div class="card">
-        <h2>Analyze Your Food</h2>
-        <p>Select one option below</p>
+<body>
+  {% include 'header.html' %}
 
-        <!-- Upload Section -->
-        <h3>📤 Upload Image</h3>
-        <form id="uploadForm" enctype="multipart/form-data">
-          {% csrf_token %}
-          <input type="file" name="file" accept="image/*" required />
-          <button type="submit">Analyze Image</button>
-        </form>
+  <main>
+    <div class="card">
+      <h2>Analyze Your Food</h2>
+      <p>Select one option below</p>
 
-        <img id="preview" class="hidden" />
+      <!-- Upload Section -->
+      <h3>📤 Upload Image</h3>
+      <form id="uploadForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" accept="image/*" required />
+        <button type="submit">Analyze Image</button>
+      </form>
 
-        <hr />
+      <img id="preview" class="hidden" />
 
-        <!-- Camera -->
-        <h3>📷 Use Camera</h3>
-        <button id="cameraBtn" type="button">Open Camera</button>
-        <video id="cameraPreview" autoplay playsinline class="hidden"></video>
-        <button id="captureBtn" class="hidden">Capture & Analyze</button>
-        <canvas id="cameraCanvas" class="hidden"></canvas>
+      <hr />
 
-        <hr />
+      <!-- Camera -->
+      <h3>📷 Use Camera</h3>
+      <button id="cameraBtn" type="button">Open Camera</button>
+      <video id="cameraPreview" autoplay playsinline class="hidden"></video>
+      <button id="captureBtn" class="hidden">Capture & Analyze</button>
+      <canvas id="cameraCanvas" class="hidden"></canvas>
 
-        <!-- Manual Entry -->
-        <h3>✍️ Manual Entry</h3>
-        <form id="manualForm">
-          <input type="text" id="foodName" placeholder="Food name" required />
-          <input
-            type="number"
-            id="foodQty"
-            placeholder="Quantity (grams)"
-            required
-          />
-          <button type="submit">Calculate</button>
-        </form>
+      <hr />
 
-        <div id="manualResult" class="hidden">
-          <h3>Nutrition Details</h3>
-          <p id="manualText"></p>
-        </div>
+      <!-- Manual Entry -->
+      <h3>✍️ Manual Entry</h3>
+      <form id="manualForm">
+        <input type="text" id="foodName" placeholder="Food name" required />
+        <input type="number" id="foodQty" placeholder="Quantity (grams)" required />
+        <button type="submit">Calculate</button>
+      </form>
 
-        <hr />
-
-        <div id="result" class="result-card hidden">
-          <div class="result-header">
-            <h2>AI Prediction Result</h2>
-          </div>
-
-          <div class="result-content-vertical">
-            <!-- IMAGE -->
-            <div class="result-image-box">
-              <img id="resultImage" src="" alt="Food Image" />
-            </div>
-
-            <!-- FOOD NAME -->
-            <h1 id="foodTitle">Food Name</h1>
-
-            <!-- CONFIDENCE -->
-            <div class="confidence-badge">
-              Confidence:
-              <span id="confidenceText">0%</span>
-            </div>
-
-            <!-- NUTRITION GRID -->
-            <div class="nutrition-grid">
-              <div class="nutrition-card calories">
-                <h3>Calories</h3>
-                <p id="caloriesText">0</p>
-              </div>
-
-              <div class="nutrition-card protein">
-                <h3>Protein</h3>
-                <p id="proteinText">0g</p>
-              </div>
-
-              <div class="nutrition-card fat">
-                <h3>Fat</h3>
-                <p id="fatText">0g</p>
-              </div>
-
-              <div class="nutrition-card carbs">
-                <h3>Carbs</h3>
-                <p id="carbsText">0g</p>
-              </div>
-            </div>
-            <!-- HEALTH SCORE -->
-            <div class="extra-card">
-              <h3>Health Score</h3>
-              <p id="healthScore">0</p>
-            </div>
-
-            <!-- CATEGORY -->
-            <div class="extra-card">
-              <h3>Calorie Category</h3>
-              <p id="categoryText">-</p>
-            </div>
-
-            <!-- RECOMMENDATION -->
-            <div class="recommendation-box">
-              <h3>Food Recommendation</h3>
-              <p id="recommendationText">Recommendation will appear here</p>
-            </div>
-
-            <!-- AI INSIGHTS -->
-            <div class="insights-box">
-              <h3>AI Insights</h3>
-
-              <ul id="insightsList">
-                <li>Insights will appear here</li>
-              </ul>
-            </div>
-
-            <!-- TOP PREDICTIONS -->
-            <div class="top-predictions">
-              <h3>Top Predictions</h3>
-
-              <div id="topPredictions"></div>
-            </div>
-
-            <!-- LOADER -->
-            <div id="loader" class="loader hidden"></div>
-          </div>
-        </div>
+      <div id="manualResult" class="hidden">
+        <h3>Nutrition Details</h3>
+        <p id="manualText"></p>
       </div>
-    </main>
 
-    <footer>
-      <p>© 2025 Food Analyzer Project</p>
-    </footer>
+      <hr />
 
-    <script src="{% static 'script.js' %}"></script>
-  </body>
+      <div id="result" class="result-card hidden">
+
+        <div class="result-header">
+          <h2>AI Prediction Result</h2>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="result-image-box">
+          <img id="resultImage" src="" alt="Food Image">
+        </div>
+
+        <!-- FOOD NAME -->
+        <h1 id="foodTitle">Food Name</h1>
+
+        <!-- CONFIDENCE -->
+        <div class="confidence-badge">
+          Confidence:
+          <span id="confidenceText">0%</span>
+        </div>
+
+        <!-- HEALTH LABEL -->
+        <div class="health-label-box">
+          <h3>Health Status</h3>
+          <p id="foodLabel">Healthy</p>
+        </div>
+
+        <!-- NUTRITION GRID -->
+        <div class="nutrition-grid">
+
+          <div class="nutrition-card calories">
+            <h3>Calories</h3>
+            <p id="caloriesText">0</p>
+          </div>
+
+          <div class="nutrition-card protein">
+            <h3>Protein</h3>
+            <p id="proteinText">0 g</p>
+          </div>
+
+          <div class="nutrition-card fat">
+            <h3>Fat</h3>
+            <p id="fatText">0 g</p>
+          </div>
+
+          <div class="nutrition-card carbs">
+            <h3>Carbs</h3>
+            <p id="carbsText">0 g</p>
+          </div>
+
+        </div>
+
+        <!-- HEALTH SCORE -->
+        <div class="info-box">
+          <h3>Health Score</h3>
+          <p id="healthScore">80</p>
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="info-box">
+          <h3>Calorie Category</h3>
+          <p id="categoryText">Normal</p>
+        </div>
+
+        <!-- RECOMMENDATION -->
+        <div class="info-box">
+          <h3>Food Recommendation</h3>
+          <p id="recommendationText">
+            Recommendation appears here
+          </p>
+        </div>
+
+        <!-- BMI -->
+        <div class="info-box">
+          <h3>BMI Based Recommendation</h3>
+          <p id="bmiRecommendation">
+            BMI recommendation here
+          </p>
+        </div>
+
+        <!-- DIET -->
+        <div class="info-box">
+          <h3>Diet Compatibility</h3>
+          <ul id="dietList"></ul>
+        </div>
+
+        <!-- RISK ALERTS -->
+        <div class="info-box">
+          <h3>AI Risk Alerts</h3>
+          <ul id="riskAlerts"></ul>
+        </div>
+
+        <!-- HEALTHY ALTERNATIVES -->
+        <div class="info-box">
+          <h3>Healthy Alternatives</h3>
+          <ul id="foodSuggestions"></ul>
+        </div>
+
+        <!-- SIMILAR FOODS -->
+        <div class="info-box">
+          <h3>Similar Food Suggestions</h3>
+          <ul id="similarFoods"></ul>
+        </div>
+
+        <!-- FITNESS GOALS -->
+        <div class="info-box">
+          <h3>Smart Fitness Goals</h3>
+          <ul id="fitnessGoals"></ul>
+        </div>
+
+        <!-- INSIGHTS -->
+        <div class="info-box">
+          <h3>AI Insights</h3>
+          <ul id="insightsList"></ul>
+        </div>
+
+        <!-- FITNESS TIPS -->
+        <div class="info-box">
+          <h3>AI Fitness Tips</h3>
+          <ul id="fitnessTips"></ul>
+        </div>
+
+        <!-- TOP PREDICTIONS -->
+        <div class="info-box">
+          <h3>Top Predictions</h3>
+          <div id="topPredictions"></div>
+        </div>
+
+      </div>
+
+    </div>
+    </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Food Analyzer Project</p>
+  </footer>
+
+  <script src="{% static 'script.js' %}"></script>
+</body>
+
 </html>

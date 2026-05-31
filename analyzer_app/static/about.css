@@ -71,3 +71,39 @@
   line-height: 1.6;
   text-align: center;
 }
+
+
+.password-box{
+
+    position:relative;
+
+    width:100%;
+
+    margin-bottom:15px;
+}
+
+.password-box input{
+
+    width:100%;
+
+    padding-right:70px;
+}
+
+.toggle-password{
+
+    position:absolute;
+
+    right:15px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    color:#2563eb;
+
+    font-weight:600;
+}

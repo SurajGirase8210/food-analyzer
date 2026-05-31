@@ -21,6 +21,9 @@ from tensorflow.keras.models import load_model
 from .forms import SignUpForm
 from .models import FoodHistory
 from .food_data import FOOD_DATA
+from .models import UserProfile
+from .food_ai_data import FOOD_AI_DATA
+
 
 
 # ======================================
@@ -45,6 +48,39 @@ CLASS_NAMES = [
     "sushi"
 ]
 
+
+DISPLAY_NAMES = {
+
+    "hamburger": "Burger",
+
+    "french_fries": "French Fries",
+
+    "fried_rice": "Fried Rice",
+
+    "hot_dog": "Hot Dog",
+
+    "ice_cream": "Ice Cream",
+
+    "spaghetti_bolognese": "Spaghetti Bolognese",
+
+    "cup_cakes": "Cup Cakes",
+
+    "carrot_cake": "Carrot Cake",
+
+    "chocolate_cake": "Chocolate Cake",
+
+    "chicken_curry": "Chicken Curry",
+
+    "samosa": "Samosa",
+
+    "pizza": "Pizza",
+
+    "donuts": "Donuts",
+
+    "steak": "Steak",
+
+    "sushi": "Sushi"
+}
 
 # ======================================
 # LAZY LOAD MODEL
@@ -113,7 +149,7 @@ def analyze_page(request):
 
 
 # ======================================
-# PREDICTION
+# PREDICTION PAGE
 # ======================================
 
 def predict(request):
@@ -175,21 +211,7 @@ def predict(request):
             predicted_class = CLASS_NAMES[
                 np.argmax(predictions)
             ]
-
-            # ----------------------------------
-            # RESULT
-            # ----------------------------------
-
-            if confidence < 0.6:
-
-                result = "Not sure what this is 🤔"
-
-            else:
-
-                result = (
-                    f"{predicted_class} "
-                    f"({confidence * 100:.2f}% confident)"
-                )
+            ai_data = FOOD_AI_DATA.get(predicted_class, {})
 
             # ----------------------------------
             # TOP 3 PREDICTIONS
@@ -254,6 +276,8 @@ def predict(request):
                 "fat": nutrition.get("fat", 0),
 
                 "carbs": nutrition.get("carbs", 0),
+
+                "top_predictions": top_predictions,
             })
 
         except Exception as e:
@@ -284,6 +308,7 @@ def signup_view(request):
             return redirect("analyze")
 
     else:
+
         form = SignUpForm()
 
     return render(request, "signup.html", {
@@ -348,16 +373,19 @@ def profile_view(request):
 
     user = request.user
 
+    # GET OR CREATE PROFILE
+    profile, created = UserProfile.objects.get_or_create(
+        user=user
+    )
+
+    # TOTAL SCANS
     total_scans = (
         FoodHistory.objects
         .filter(user=user)
         .count()
     )
 
-    # ----------------------------------
     # CALORIE TREND DATA
-    # ----------------------------------
-
     data = (
         FoodHistory.objects
         .filter(user=user)
@@ -381,9 +409,60 @@ def profile_view(request):
         for item in data
     ]
 
+    # BMI SAVE
+    if request.method == "POST":
+
+        height = float(
+            request.POST.get("height")
+        )
+
+        weight = float(
+            request.POST.get("weight")
+        )
+
+        age = request.POST.get("age")
+
+        gender = request.POST.get("gender")
+
+        bmi = weight / ((height / 100) ** 2)
+
+        # BMI CATEGORY
+        if bmi < 18.5:
+
+            category = "Underweight"
+
+        elif bmi < 25:
+
+            category = "Normal"
+
+        elif bmi < 30:
+
+            category = "Overweight"
+
+        else:
+
+            category = "Obese"
+
+        # SAVE PROFILE
+        profile.height = height
+
+        profile.weight = weight
+
+        profile.age = age
+
+        profile.gender = gender
+
+        profile.bmi = round(bmi, 1)
+
+        profile.bmi_category = category
+
+        profile.save()
+
     return render(request, "profile.html", {
 
         "user": user,
+
+        "profile": profile,
 
         "total_scans": total_scans,
 
@@ -396,13 +475,12 @@ def profile_view(request):
 # ======================================
 # API
 # ======================================
-
+@login_required(login_url="login")
 def analyze_image(request):
 
     print("correct analyze_image running")
 
     if request.method != "POST":
-
         return JsonResponse({
             "error": "Invalid request"
         })
@@ -410,7 +488,6 @@ def analyze_image(request):
     file = request.FILES.get("file")
 
     if not file:
-
         return JsonResponse({
             "error": "No image uploaded"
         })
@@ -419,9 +496,9 @@ def analyze_image(request):
 
     try:
 
-        # ----------------------------------
+        # ======================================
         # SAVE FILE
-        # ----------------------------------
+        # ======================================
 
         file_path = default_storage.save(
             file.name,
@@ -433,111 +510,311 @@ def analyze_image(request):
             file_path
         )
 
-        # ----------------------------------
+        # ======================================
         # PREPROCESS IMAGE
-        # ----------------------------------
+        # ======================================
 
-        processed_image = preprocess_image(full_path)
+        processed_image = preprocess_image(
+            full_path
+        )
 
         if processed_image is None:
-
             return JsonResponse({
                 "error": "Image processing failed"
             })
 
-        # ----------------------------------
+        # ======================================
         # MODEL PREDICTION
-        # ----------------------------------
+        # ======================================
 
         model = get_model()
 
-        predictions = model.predict(processed_image)
+        predictions = model.predict(
+            processed_image
+        )
 
         probs = predictions[0]
 
-        # ----------------------------------
-        # MAIN PREDICTION
-        # ----------------------------------
-
         pred_idx = np.argmax(probs)
 
-        confidence = float(probs[pred_idx])
+        confidence = float(
+            probs[pred_idx]
+        )
 
-        predicted_class = CLASS_NAMES[pred_idx]
+        predicted_class = CLASS_NAMES[
+            pred_idx
+        ]
+
+        display_name = DISPLAY_NAMES.get(
+            predicted_class,
+            predicted_class.replace("_", " ").title()
+        )
+
+        # ======================================
+        # UNKNOWN FOOD CHECK
+        # ======================================
+
+        invalid_food = False
 
         if confidence < 0.5:
             predicted_class = "Unknown"
+            invalid_food = True
 
-        # ----------------------------------
-        # TOP 3 PREDICTIONS
-        # ----------------------------------
+        # ======================================
+        # TOP PREDICTIONS
+        # ======================================
 
-        top_indices = probs.argsort()[-3:][::-1]
+        top_indices = (
+            probs.argsort()[-3:][::-1]
+        )
 
         top_predictions = [
             {
-                "food": CLASS_NAMES[i],
+                "food": DISPLAY_NAMES.get(
+                    CLASS_NAMES[i],
+                    CLASS_NAMES[i].replace("_", " ").title()
+                ),
 
                 "confidence": round(
                     float(probs[i]) * 100,
                     2
                 )
             }
+
             for i in top_indices
         ]
 
-        # ----------------------------------
+        # ======================================
+        # USER PROFILE
+        # ======================================
+
+        profile = None
+
+        if request.user.is_authenticated:
+            profile = (
+                UserProfile.objects
+                .filter(user=request.user)
+                .first()
+            )
+
+        # ======================================
+        # BMI RECOMMENDATION
+        # ======================================
+
+        bmi_recommendation = ""
+        bmi_category = ""
+
+        if profile and profile.bmi:
+
+            bmi_category = profile.bmi_category
+
+            if profile.bmi_category == "Underweight":
+
+                bmi_recommendation = (
+                    "High protein foods recommended."
+                )
+
+            elif profile.bmi_category == "Normal":
+
+                bmi_recommendation = (
+                    "Maintain balanced nutrition."
+                )
+
+            elif profile.bmi_category == "Overweight":
+
+                bmi_recommendation = (
+                    "Reduce high calorie foods."
+                )
+
+            else:
+
+                bmi_recommendation = (
+                    "Prefer low fat and low sugar meals."
+                )
+
+        else:
+
+            bmi_recommendation = (
+                "Please calculate BMI first in profile section."
+            )
+
+        # ======================================
         # NUTRITION DATA
-        # ----------------------------------
+        # ======================================
 
         nutrition = FOOD_DATA.get(
             predicted_class,
             {}
         )
 
-        # ----------------------------------
+        calories = nutrition.get(
+            "calories",
+            0
+        )
+
+        protein = nutrition.get(
+            "protein",
+            0
+        )
+
+        fat = nutrition.get(
+            "fat",
+            0
+        )
+
+        carbs = nutrition.get(
+            "carbs",
+            0
+        )
+
+        # ======================================
         # SAVE HISTORY
-        # ----------------------------------
+        # ======================================
 
         if (
             request.user.is_authenticated
-            and predicted_class != "Unknown"
+            and not invalid_food
         ):
 
             FoodHistory.objects.create(
+
                 user=request.user,
+
                 food_name=predicted_class,
+
                 confidence=confidence,
-                calories=nutrition.get("calories"),
-                protein=nutrition.get("protein"),
-                fat=nutrition.get("fat"),
-                carbs=nutrition.get("carbs"),
+
+                calories=calories,
+
+                protein=protein,
+
+                fat=fat,
+
+                carbs=carbs,
             )
 
         # ======================================
-        # AI FEATURES
+        # UNKNOWN FOOD RESPONSE
         # ======================================
 
-        calories = nutrition.get("calories", 0)
-        protein = nutrition.get("protein", 0)
-        fat = nutrition.get("fat", 0)
-        carbs = nutrition.get("carbs", 0)
+        if invalid_food:
 
-        # ----------------------------------
+            return JsonResponse({
+
+                "food": "Unknown",
+
+                "confidence": round(
+                    confidence * 100,
+                    2
+                ),
+
+                "calories": 0,
+
+                "protein": 0,
+
+                "fat": 0,
+
+                "carbs": 0,
+
+                "category": "",
+
+                "health_score": "",
+
+                "recommendation": "",
+
+                "insights": [],
+
+                "top_predictions":
+                    top_predictions,
+
+                "food_label": "",
+
+                "bmi_recommendation":
+                    bmi_recommendation,
+
+                "bmi_category":
+                    bmi_category,
+
+                "diet_types": [],
+
+                "risk_alerts": [],
+
+                "food_suggestions": [],
+
+                "fitness_goals": [],
+            })
+
+        # ======================================
+        # AI DATA
+        # ======================================
+
+        ai_data = FOOD_AI_DATA.get(
+            predicted_class.lower(),
+            {}
+        )
+
+        recommendation = ai_data.get(
+            "recommendation",
+            "Balanced nutrition recommended."
+        )
+
+        insights = ai_data.get(
+            "insights",
+            []
+        )
+
+        risk_alerts = ai_data.get(
+            "risk_alerts",
+            []
+        )
+
+        diet_types = ai_data.get(
+            "diet_types",
+            []
+        )
+
+        similar_foods = ai_data.get(
+            "similar_foods",
+            []
+        )
+
+        fitness_goals = ai_data.get(
+            "fitness_goals",
+            []
+        )
+
+        food_label = ai_data.get(
+            "health_label",
+            "Moderate"
+        )
+        
+        fitness_tips = ai_data.get(
+            "fitness_tips",
+            []
+        )
+
+        food_suggestions = ai_data.get(
+            "healthy_alternatives",
+            []
+        )
+
+        # ======================================
         # CALORIE CATEGORY
-        # ----------------------------------
+        # ======================================
 
         category = "Low Calorie"
 
         if calories > 450:
+
             category = "High Calorie"
 
         elif calories > 250:
+
             category = "Medium Calorie"
 
-        # ----------------------------------
+        # ======================================
         # HEALTH SCORE
-        # ----------------------------------
+        # ======================================
 
         health_score = 85
 
@@ -558,147 +835,13 @@ def analyze_image(request):
             min(100, health_score)
         )
 
-        # ----------------------------------
-        # FOOD RECOMMENDATIONS
-        # ----------------------------------
-
-        recommendations = []
-
-        if calories < 200:
-
-            recommendations.append(
-                "Light meal suitable for weight management."
-            )
-
-        if calories > 500:
-
-            recommendations.append(
-                "High calorie meal. Consume in moderation."
-            )
-
-        if protein > 20:
-
-            recommendations.append(
-                "Excellent protein source for muscle recovery."
-            )
-
-        if fat > 20:
-
-            recommendations.append(
-                "Contains high fat content. Balance with vegetables."
-            )
-
-        if carbs > 50:
-
-            recommendations.append(
-                "High carbohydrate food. Good for energy."
-            )
-
-        if calories < 300 and protein > 10:
-
-            recommendations.append(
-                "Good option for fitness-focused diets."
-            )
-
-        if fat < 10:
-
-            recommendations.append(
-                "Low fat meal suitable for heart-conscious diets."
-            )
-
-        if calories > 700:
-
-            recommendations.append(
-                "Consider smaller portions for balanced nutrition."
-            )
-
-        if not recommendations:
-
-            recommendations.append(
-                "Balanced meal with moderate nutrition values."
-            )
-
-        recommendation = random.choice(recommendations)
-
-        # ----------------------------------
-        # AI INSIGHTS
-        # ----------------------------------
-
-        insights = []
-
-        if protein > 15:
-
-            insights.append(
-                "High protein may support muscle growth and recovery."
-            )
-
-        if fat > 20:
-
-            insights.append(
-                "This food contains elevated fat levels."
-            )
-
-        if carbs > 40:
-
-            insights.append(
-                "Rich in carbohydrates for quick energy."
-            )
-
-        if calories < 250:
-
-            insights.append(
-                "Suitable for low calorie meal plans."
-            )
-
-        if calories > 600:
-
-            insights.append(
-                "Frequent consumption may contribute to weight gain."
-            )
-
-        if fat < 10:
-
-            insights.append(
-                "Low fat composition supports healthier eating habits."
-            )
-
-        if protein > carbs:
-
-            insights.append(
-                "Protein-rich profile detected."
-            )
-
-        if carbs > protein:
-
-            insights.append(
-                "Carbohydrates are the dominant nutrient."
-            )
-
-        if health_score >= 85:
-
-            insights.append(
-                "Overall nutritional profile appears healthy."
-            )
-
-        if health_score < 60:
-
-            insights.append(
-                "Consider balancing this meal with fruits or vegetables."
-            )
-
-        if not insights:
-
-            insights.append(
-                "Moderate nutritional composition detected."
-            )
-
-        # ----------------------------------
+        # ======================================
         # JSON RESPONSE
-        # ----------------------------------
-
+        # ======================================
+        
         return JsonResponse({
 
-            "food": predicted_class,
+            "food": display_name,
 
             "confidence": round(
                 confidence * 100,
@@ -717,11 +860,41 @@ def analyze_image(request):
 
             "health_score": health_score,
 
-            "recommendation": recommendation,
+            "recommendation":
+                recommendation,
 
-            "insights": insights,
+            "insights":
+                insights,
 
-            "top_predictions": top_predictions,
+            "top_predictions":
+                top_predictions,
+
+            "food_label":
+                food_label,
+
+            "bmi_recommendation":
+                bmi_recommendation,
+
+            "bmi_category":
+                bmi_category,
+
+            "diet_types":
+                diet_types,
+
+            "risk_alerts":
+                risk_alerts,
+
+            "similar_foods":
+                similar_foods,
+
+            "fitness_goals":
+                fitness_goals,
+
+            "fitness_tips":
+                fitness_tips,
+
+            "food_suggestions":
+                food_suggestions
         })
 
     except Exception as e:
@@ -732,9 +905,9 @@ def analyze_image(request):
 
     finally:
 
-        # ----------------------------------
+        # ======================================
         # CLEANUP
-        # ----------------------------------
+        # ======================================
 
         if file_path:
 
@@ -750,7 +923,6 @@ def analyze_image(request):
             except Exception:
                 pass
 
-
 # ======================================
 # RESULT PAGE
 # ======================================
@@ -759,14 +931,11 @@ def result(request):
 
     context = {
 
-        "image_url": image_url,
+        "image_url": "",
 
-        "food_name": predicted_label,
+        "food_name": "",
 
-        "confidence": round(
-            confidence * 100,
-            2
-        ),
+        "confidence": 0,
 
         "calories": 250,
 
@@ -837,3 +1006,5 @@ def dashboard_view(request):
 
         "metrics": metrics_text,
     })
+    
+

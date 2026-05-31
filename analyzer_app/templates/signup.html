@@ -1,57 +1,97 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Sign Up | Food Analyzer</title>
 
-    <link rel="stylesheet" href="{% static 'header.css' %}">
-    <link rel="stylesheet" href="{% static 'analyze.css' %}">
-    <link rel="stylesheet" href="{% static 'responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'auth.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'header.css' %}" />
+    <link rel="stylesheet" href="{% static 'analyze.css' %}" />
+    <link rel="stylesheet" href="{% static 'responsive.css' %}" />
+    <link rel="stylesheet" href="{% static 'auth.css' %}" />
+  </head>
 
-<body>
+  <body>
+    {% include 'header.html' %}
 
-{% include 'header.html' %}
-
-<main>
-    <div class="card">
-
+    <main>
+      <div class="card">
         <h2>Create Account</h2>
         <p>Sign up to start analyzing your food</p>
 
         {% if form.errors %}
-        <div class='error-message'>
-            {{ form.errors }}
-        </div>
+        <div class="error-message">{{ form.errors }}</div>
         {% endif %}
 
         <form method="POST">
-            {% csrf_token %}
+          {% csrf_token %}
 
-            <input type="text" name="username" placeholder="Username" required>
+          <input type="text" name="username" placeholder="Username" required />
 
-            <input type="email" name="email" placeholder="Email" required>
+          <input type="email" name="email" placeholder="Email" required />
 
-            <input type="password" name="password1" placeholder="Password" required>
+          <div class="password-box">
+            <input
+              type="password"
+              name="password1"
+              id="password1"
+              placeholder="Password"
+              required
+            />
 
-            <input type="password" name="password2" placeholder="Confirm Password" required>
+            <span
+              class="toggle-password"
+              onclick="togglePassword('password1', this)"
+            >
+              Show
+            </span>
+          </div>
 
-            <button type="submit">Sign Up</button>
+          <div class="password-box">
+            <input
+              type="password"
+              name="password2"
+              id="password2"
+              placeholder="Confirm Password"
+              required
+            />
+
+            <span
+              class="toggle-password"
+              onclick="togglePassword('password2', this)"
+            >
+              Show
+            </span>
+          </div>
+
+          <button type="submit">Sign Up</button>
         </form>
 
-        <p style="margin-top:10px;">
-            Already have an account?
-            <a href="{% url 'login' %}">Login</a>
+        <p style="margin-top: 10px">
+          Already have an account?
+          <a href="{% url 'login' %}">Login</a>
         </p>
+      </div>
+    </main>
 
-    </div>
-</main>
+    <footer>
+      <p>© 2025 Food Analyzer Project</p>
+    </footer>
 
-<footer>
-    <p>© 2025 Food Analyzer Project</p>
-</footer>
+    <script>
+      function togglePassword(id, element) {
+        const input = document.getElementById(id);
 
-</body>
+        if (input.type === "password") {
+          input.type = "text";
+
+          element.innerText = "Hide";
+        } else {
+          input.type = "password";
+
+          element.innerText = "Show";
+        }
+      }
+    </script>
+  </body>
 </html>
