@@ -250,6 +250,9 @@ The model predicts:
 - Dashboard Page
   ![Dashboard Page](screenshots/Dashboard.png)
 
+- Profile Page
+  ![Profile Page](screenshots/Profile.png)  
+
 - Food History Page
   ![Food History](screenshots/history.png)
 
