@@ -61,8 +61,9 @@
 
       <div id="result" class="result-card hidden">
 
-        <div class="result-header">
-          <h2>AI Prediction Result</h2>
+        <div class="result-top">
+          <span class="ai-badge">🤖 AI Analysis Complete</span>
+          <h2>Food Nutrition Report</h2>
         </div>
 
         <!-- IMAGE -->
@@ -110,83 +111,94 @@
 
         </div>
 
-        <!-- HEALTH SCORE -->
-        <div class="info-box">
-          <h3>Health Score</h3>
-          <p id="healthScore">80</p>
+
+
+        <div class="info-box summary-card">
+
+          <h3>Food Summary</h3>
+
+          <div class="summary-item">
+            <div class="health-score-header">
+              <strong>Health Score</strong>
+            </div>
+
+            <div class="health-circle">
+              <span id="scoreValue">0</span>
+            </div>
+
+            <p class="score-label">Excellent</p>
+          </div>
+
+
+        <div class="summary-item">
+          <strong>Calorie Category:</strong>
+          <span id="categoryText">Normal</span>
         </div>
 
-        <!-- CATEGORY -->
-        <div class="info-box">
-          <h3>Calorie Category</h3>
-          <p id="categoryText">Normal</p>
+        <div class="summary-item">
+          <strong>Recommendation:</strong>
+          <span id="recommendationText"></span>
         </div>
 
-        <!-- RECOMMENDATION -->
-        <div class="info-box">
-          <h3>Food Recommendation</h3>
-          <p id="recommendationText">
-            Recommendation appears here
-          </p>
+        <div class="summary-item">
+          <strong>BMI Advice:</strong>
+          <span id="bmiRecommendation"></span>
         </div>
 
-        <!-- BMI -->
-        <div class="info-box">
-          <h3>BMI Based Recommendation</h3>
-          <p id="bmiRecommendation">
-            BMI recommendation here
-          </p>
-        </div>
+      </div>
+      <!-- DIET -->
+      <div class="info-box">
+        <h3>Diet Compatibility</h3>
+        <div id="dietList"></div>
+      </div>
 
-        <!-- DIET -->
-        <div class="info-box">
-          <h3>Diet Compatibility</h3>
-          <ul id="dietList"></ul>
-        </div>
+      <!-- RISK ALERTS -->
+      <div class="info-box">
+        <h3>AI Risk Alerts</h3>
+        <div id="riskAlerts"></div>
+      </div>
 
-        <!-- RISK ALERTS -->
-        <div class="info-box">
-          <h3>AI Risk Alerts</h3>
-          <ul id="riskAlerts"></ul>
-        </div>
+      <div class="dual-grid">
 
-        <!-- HEALTHY ALTERNATIVES -->
         <div class="info-box">
           <h3>Healthy Alternatives</h3>
           <ul id="foodSuggestions"></ul>
         </div>
 
-        <!-- SIMILAR FOODS -->
         <div class="info-box">
           <h3>Similar Food Suggestions</h3>
           <ul id="similarFoods"></ul>
         </div>
 
-        <!-- FITNESS GOALS -->
-        <div class="info-box">
-          <h3>Smart Fitness Goals</h3>
-          <ul id="fitnessGoals"></ul>
-        </div>
+      </div>
 
-        <!-- INSIGHTS -->
+      <!-- FITNESS GOALS -->
+      <div class="info-box">
+        <h3>Smart Fitness Goals</h3>
+        <ul id="fitnessGoals"></ul>
+      </div>
+
+      <div class="dual-grid">
+
         <div class="info-box">
           <h3>AI Insights</h3>
           <ul id="insightsList"></ul>
         </div>
 
-        <!-- FITNESS TIPS -->
         <div class="info-box">
           <h3>AI Fitness Tips</h3>
           <ul id="fitnessTips"></ul>
         </div>
 
-        <!-- TOP PREDICTIONS -->
-        <div class="info-box">
-          <h3>Top Predictions</h3>
-          <div id="topPredictions"></div>
-        </div>
-
       </div>
+
+      <!-- TOP PREDICTIONS -->
+      <div class="info-box">
+        <h3>Top Predictions</h3>
+        <div id="topPredictions"></div>
+      </div>
+
+    </div>
 
     </div>
     </div>

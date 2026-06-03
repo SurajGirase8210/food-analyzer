@@ -13,7 +13,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Sum
+from django.db.models import Sum,Count,Avg
 from django.db.models.functions import TruncDate
 
 from tensorflow.keras.models import load_model
@@ -24,7 +24,9 @@ from .food_data import FOOD_DATA
 from .models import UserProfile
 from .food_ai_data import FOOD_AI_DATA
 
-
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncDate
+import json
 
 # ======================================
 # CLASS LABELS
@@ -500,10 +502,7 @@ def analyze_image(request):
         # SAVE FILE
         # ======================================
 
-        file_path = default_storage.save(
-            file.name,
-            file
-        )
+        file_path = default_storage.save(file.name, file)
 
         full_path = os.path.join(
             settings.MEDIA_ROOT,
@@ -514,9 +513,7 @@ def analyze_image(request):
         # PREPROCESS IMAGE
         # ======================================
 
-        processed_image = preprocess_image(
-            full_path
-        )
+        processed_image = preprocess_image(full_path)
 
         if processed_image is None:
             return JsonResponse({
@@ -529,21 +526,15 @@ def analyze_image(request):
 
         model = get_model()
 
-        predictions = model.predict(
-            processed_image
-        )
+        predictions = model.predict(processed_image)
 
         probs = predictions[0]
 
         pred_idx = np.argmax(probs)
 
-        confidence = float(
-            probs[pred_idx]
-        )
+        confidence = float(probs[pred_idx])
 
-        predicted_class = CLASS_NAMES[
-            pred_idx
-        ]
+        predicted_class = CLASS_NAMES[pred_idx]
 
         display_name = DISPLAY_NAMES.get(
             predicted_class,
@@ -564,9 +555,7 @@ def analyze_image(request):
         # TOP PREDICTIONS
         # ======================================
 
-        top_indices = (
-            probs.argsort()[-3:][::-1]
-        )
+        top_indices = probs.argsort()[-3:][::-1]
 
         top_predictions = [
             {
@@ -574,13 +563,11 @@ def analyze_image(request):
                     CLASS_NAMES[i],
                     CLASS_NAMES[i].replace("_", " ").title()
                 ),
-
                 "confidence": round(
                     float(probs[i]) * 100,
                     2
                 )
             }
-
             for i in top_indices
         ]
 
@@ -591,11 +578,9 @@ def analyze_image(request):
         profile = None
 
         if request.user.is_authenticated:
-            profile = (
-                UserProfile.objects
-                .filter(user=request.user)
-                .first()
-            )
+            profile = UserProfile.objects.filter(
+                user=request.user
+            ).first()
 
         # ======================================
         # BMI RECOMMENDATION
@@ -609,31 +594,26 @@ def analyze_image(request):
             bmi_category = profile.bmi_category
 
             if profile.bmi_category == "Underweight":
-
                 bmi_recommendation = (
                     "High protein foods recommended."
                 )
 
             elif profile.bmi_category == "Normal":
-
                 bmi_recommendation = (
                     "Maintain balanced nutrition."
                 )
 
             elif profile.bmi_category == "Overweight":
-
                 bmi_recommendation = (
                     "Reduce high calorie foods."
                 )
 
             else:
-
                 bmi_recommendation = (
                     "Prefer low fat and low sugar meals."
                 )
 
         else:
-
             bmi_recommendation = (
                 "Please calculate BMI first in profile section."
             )
@@ -647,51 +627,48 @@ def analyze_image(request):
             {}
         )
 
-        calories = nutrition.get(
-            "calories",
-            0
-        )
-
-        protein = nutrition.get(
-            "protein",
-            0
-        )
-
-        fat = nutrition.get(
-            "fat",
-            0
-        )
-
-        carbs = nutrition.get(
-            "carbs",
-            0
-        )
+        calories = nutrition.get("calories", 0)
+        protein = nutrition.get("protein", 0)
+        fat = nutrition.get("fat", 0)
+        carbs = nutrition.get("carbs", 0)
 
         # ======================================
         # SAVE HISTORY
         # ======================================
 
-        if (
-            request.user.is_authenticated
-            and not invalid_food
-        ):
+        if request.user.is_authenticated and not invalid_food:
 
             FoodHistory.objects.create(
-
                 user=request.user,
-
                 food_name=predicted_class,
-
                 confidence=confidence,
-
                 calories=calories,
-
                 protein=protein,
-
                 fat=fat,
-
                 carbs=carbs,
             )
+
+            # ======================================
+            # TOTAL SCANS & BADGES
+            # ======================================
+
+            total_scans = FoodHistory.objects.filter(
+                user=request.user
+            ).count()
+            
+            badges = []
+
+            if total_scans >= 1:
+                badges.append("First Analysis")
+
+            elif total_scans >= 10:
+                badges.append("Food Explorer")
+
+
+            elif total_scans >= 50:
+                badges.append("Food Master")
+                
+            
 
         # ======================================
         # UNKNOWN FOOD RESPONSE
@@ -702,46 +679,30 @@ def analyze_image(request):
             return JsonResponse({
 
                 "food": "Unknown",
-
-                "confidence": round(
-                    confidence * 100,
-                    2
-                ),
+                "confidence": round(confidence * 100, 2),
 
                 "calories": 0,
-
                 "protein": 0,
-
                 "fat": 0,
-
                 "carbs": 0,
 
                 "category": "",
-
                 "health_score": "",
-
                 "recommendation": "",
-
                 "insights": [],
 
-                "top_predictions":
-                    top_predictions,
+                "top_predictions": top_predictions,
 
                 "food_label": "",
 
-                "bmi_recommendation":
-                    bmi_recommendation,
-
-                "bmi_category":
-                    bmi_category,
+                "bmi_recommendation": bmi_recommendation,
+                "bmi_category": bmi_category,
 
                 "diet_types": [],
-
                 "risk_alerts": [],
-
                 "food_suggestions": [],
-
                 "fitness_goals": [],
+                "fitness_tips": []
             })
 
         # ======================================
@@ -758,39 +719,16 @@ def analyze_image(request):
             "Balanced nutrition recommended."
         )
 
-        insights = ai_data.get(
-            "insights",
-            []
-        )
-
-        risk_alerts = ai_data.get(
-            "risk_alerts",
-            []
-        )
-
-        diet_types = ai_data.get(
-            "diet_types",
-            []
-        )
-
-        similar_foods = ai_data.get(
-            "similar_foods",
-            []
-        )
-
-        fitness_goals = ai_data.get(
-            "fitness_goals",
-            []
-        )
+        insights = ai_data.get("insights", [])
+        risk_alerts = ai_data.get("risk_alerts", [])
+        diet_types = ai_data.get("diet_types", [])
+        similar_foods = ai_data.get("similar_foods", [])
+        fitness_goals = ai_data.get("fitness_goals", [])
+        fitness_tips = ai_data.get("fitness_tips", [])
 
         food_label = ai_data.get(
             "health_label",
             "Moderate"
-        )
-        
-        fitness_tips = ai_data.get(
-            "fitness_tips",
-            []
         )
 
         food_suggestions = ai_data.get(
@@ -805,11 +743,9 @@ def analyze_image(request):
         category = "Low Calorie"
 
         if calories > 450:
-
             category = "High Calorie"
 
         elif calories > 250:
-
             category = "Medium Calorie"
 
         # ======================================
@@ -838,63 +774,39 @@ def analyze_image(request):
         # ======================================
         # JSON RESPONSE
         # ======================================
-        
+
         return JsonResponse({
 
             "food": display_name,
-
-            "confidence": round(
-                confidence * 100,
-                2
-            ),
+            "confidence": round(confidence * 100, 2),
 
             "calories": calories,
-
             "protein": protein,
-
             "fat": fat,
-
             "carbs": carbs,
 
             "category": category,
-
             "health_score": health_score,
 
-            "recommendation":
-                recommendation,
+            "recommendation": recommendation,
+            "insights": insights,
 
-            "insights":
-                insights,
+            "top_predictions": top_predictions,
 
-            "top_predictions":
-                top_predictions,
+            "food_label": food_label,
 
-            "food_label":
-                food_label,
+            "bmi_recommendation": bmi_recommendation,
+            "bmi_category": bmi_category,
 
-            "bmi_recommendation":
-                bmi_recommendation,
+            "diet_types": diet_types,
+            "risk_alerts": risk_alerts,
 
-            "bmi_category":
-                bmi_category,
+            "similar_foods": similar_foods,
 
-            "diet_types":
-                diet_types,
+            "fitness_goals": fitness_goals,
+            "fitness_tips": fitness_tips,
 
-            "risk_alerts":
-                risk_alerts,
-
-            "similar_foods":
-                similar_foods,
-
-            "fitness_goals":
-                fitness_goals,
-
-            "fitness_tips":
-                fitness_tips,
-
-            "food_suggestions":
-                food_suggestions
+            "food_suggestions": food_suggestions
         })
 
     except Exception as e:
@@ -912,16 +824,15 @@ def analyze_image(request):
         if file_path:
 
             try:
-
                 os.remove(
                     os.path.join(
                         settings.MEDIA_ROOT,
                         file_path
                     )
                 )
-
             except Exception:
                 pass
+
 
 # ======================================
 # RESULT PAGE
@@ -930,19 +841,12 @@ def analyze_image(request):
 def result(request):
 
     context = {
-
         "image_url": "",
-
         "food_name": "",
-
         "confidence": 0,
-
         "calories": 250,
-
         "protein": 10,
-
         "fat": 8,
-
         "carbs": 30,
     }
 
@@ -952,59 +856,148 @@ def result(request):
         context
     )
 
-
 # ======================================
 # DASHBOARD
 # ======================================
 
 @login_required(login_url="login")
 def dashboard_view(request):
-
-    data = (
+    # Daily calorie totals
+    daily_data = (
         FoodHistory.objects
         .filter(user=request.user)
-        .annotate(
-            date=TruncDate("created_at")
-        )
+        .annotate(date=TruncDate("created_at"))
         .values("date")
-        .annotate(
-            total_calories=Sum("calories")
-        )
+        .annotate(total_calories=Sum("calories"))
         .order_by("date")
     )
 
+    # Get user profile
+    profile = UserProfile.objects.filter(
+        user=request.user
+    ).first()
+    
+
+    # Set calorie target based on BMI
+    target_calories = 2200
+
+    if profile:
+        if profile.bmi_category == "Underweight":
+            target_calories = 2500
+
+        elif profile.bmi_category == "Normal":
+            target_calories = 2200
+
+        elif profile.bmi_category == "Overweight":
+            target_calories = 1800
+
+        elif profile.bmi_category == "Obese":
+            target_calories = 1500
+
+    # Today's calorie intake
+    from django.utils import timezone
+
+    today = timezone.now().date()
+
+    today_calories = (
+        FoodHistory.objects
+        .filter(
+            user=request.user,
+            created_at__date=today
+        )
+        .aggregate(
+            total=Sum("calories")
+        )["total"] or 0
+    )
+
+    remaining_calories = max(
+        target_calories - today_calories,
+        0
+    )
+
+    progress = (min(
+        int((today_calories / target_calories) * 100),
+        100
+    )if target_calories > 0 else 0)
+
+    # Chart data
     dates = [
         str(item["date"])
-        for item in data
+        for item in daily_data
     ]
 
     calories = [
         item["total_calories"] or 0
-        for item in data
+        for item in daily_data
     ]
 
-    metrics_text = ""
+    # Top 5 most consumed foods
+    food_distribution = (
+        FoodHistory.objects
+        .filter(user=request.user)
+        .values("food_name")
+        .annotate(total=Count("id"))
+        .order_by("-total")[:5]
+    )
 
+    food_labels = [
+        item["food_name"]
+        for item in food_distribution
+    ]
+
+    food_counts = [
+        item["total"]
+        for item in food_distribution
+    ]
+
+    # Read metrics file
     try:
-
-        with open(
-            "static/graphs/metrics.txt",
-            "r"
-        ) as f:
-
+        with open("static/graphs/metrics.txt", "r") as f:
             metrics_text = f.read()
 
     except Exception:
-
         metrics_text = "Metrics not available"
 
-    return render(request, "dashboard.html", {
 
-        "dates": json.dumps(dates),
+    user_history = FoodHistory.objects.filter(user=request.user)
 
-        "calories": json.dumps(calories),
-
-        "metrics": metrics_text,
-    })
+    total_scans = user_history.count()
     
+    badges = []
+    
+    if total_scans >= 1:
+        badges.append("🏆 First Analysis")
+    if total_scans >= 10:
+        badges.append("🥗 Food Explorer")
+    if total_scans >= 50:
+        badges.append("🌟 Food Master")
+    if total_scans >= 100:
+        badges.append("🥇 Food Champion")
 
+
+    total_foods = FoodHistory.objects.filter(user = request.user).count()
+    
+    avg_calories = FoodHistory.objects.filter(user = request.user).aggregate(avg = Avg("calories"))['avg'] or 0
+    
+    print("Current User:", request.user.username)
+    print("Total Scans:", total_scans)
+    print("Badges:", badges)
+
+    return render(
+        request,
+        "dashboard.html",
+        {
+            "dates": json.dumps(dates),
+            "calories": json.dumps(calories),
+            "metrics": metrics_text,
+            "food_labels": json.dumps(food_labels),
+            "food_counts": json.dumps(food_counts),
+            "target_calories": target_calories,
+            "today_calories": today_calories,
+            "remaining_calories": remaining_calories,
+            "progress": progress,
+            "badges": badges,
+            "total_foods": total_foods,
+            "avg_calories": round(avg_calories),
+        },
+    )

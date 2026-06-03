@@ -128,8 +128,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (healthScore) {
       healthScore.innerText = data.health_score || "80";
+
+      const score = parseInt(data.health_score || 80);
+
+      const circle = document.querySelector(".health-circle");
+
+      if (circle) {
+        circle.style.setProperty("--score", score);
+      }
     }
 
+    const score = parseInt(data.health_score || 80);
+
+    const scoreValue = document.getElementById("scoreValue");
+
+    if (scoreValue) {
+      scoreValue.innerText = score;
+    }
+
+    const circle = document.querySelector(".health-circle");
+
+    if (circle) {
+      circle.style.setProperty("--score", score);
+    }
     if (caloriesText) {
       caloriesText.innerText = data.calories || "0";
     }
@@ -161,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.insights && data.insights.length > 0) {
         data.insights.forEach((item) => {
           insightsList.innerHTML += `
-          <li>${item}</li>
+          <span class="pill">${item}</span>
         `;
         });
       } else {
@@ -179,11 +200,22 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.top_predictions && data.top_predictions.length > 0) {
         data.top_predictions.forEach((item) => {
           topPredictions.innerHTML += `
-          <div class="prediction-row">
-            <span>${item.food}</span>
-            <span>${item.confidence}%</span>
-          </div>
-        `;
+        <div class="prediction-row">
+
+            <div class="prediction-label">
+                <span>${item.food}</span>
+                <span>${item.confidence}%</span>
+            </div>
+
+            <div class="prediction-bar">
+                <div
+                    class="prediction-fill"
+                    style="width:${item.confidence}%">
+                </div>
+            </div>
+
+        </div>
+    `;
         });
       } else {
         topPredictions.innerHTML = "<p>No predictions available</p>";
@@ -217,8 +249,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.diet_types && data.diet_types.length > 0) {
         data.diet_types.forEach((item) => {
           dietList.innerHTML += `
-          <li>${item}</li>
-        `;
+        <span class="capsule">${item}</span>
+    `;
         });
       } else {
         dietList.innerHTML = "<li>No diet compatibility found</li>";
@@ -235,8 +267,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.food_suggestions && data.food_suggestions.length > 0) {
         data.food_suggestions.forEach((item) => {
           foodSuggestions.innerHTML += `
-                <li>${item}</li>
-            `;
+    <span class="capsule">${item}</span>
+`;
         });
       } else {
         foodSuggestions.innerHTML =
@@ -246,32 +278,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* SIMILAR FOODS */
 
-const similarFoods =
-    document.getElementById("similarFoods");
+    const similarFoods = document.getElementById("similarFoods");
 
-if (similarFoods) {
+    if (similarFoods) {
+      similarFoods.innerHTML = "";
 
-    similarFoods.innerHTML = "";
-
-    if (
-        data.similar_foods &&
-        data.similar_foods.length > 0
-    ) {
-
+      if (data.similar_foods && data.similar_foods.length > 0) {
         data.similar_foods.forEach((item) => {
-
-            similarFoods.innerHTML += `
-                <li>${item}</li>
+          similarFoods.innerHTML += `
+               <span class="capsule">${item}</span>
             `;
-
         });
-
-    } else {
-
-        similarFoods.innerHTML =
-            "<li>No similar foods available</li>";
+      } else {
+        similarFoods.innerHTML = "<li>No similar foods available</li>";
+      }
     }
-}
 
     /* RISK ALERTS */
 
@@ -281,75 +302,53 @@ if (similarFoods) {
       riskAlerts.innerHTML = "";
 
       if (data.risk_alerts && data.risk_alerts.length > 0) {
-        data.risk_alerts.forEach((item) => {
+        data.risk_alerts.forEach((alert) => {
           riskAlerts.innerHTML += `
-          <li>${item}</li>
-        `;
+        <div class="alert danger">
+            ⚠ ${alert}
+        </div>
+    `;
         });
       } else {
         riskAlerts.innerHTML = "<li>No health risks detected</li>";
       }
     }
 
-    
     /* FITNESS GOALS */
 
-const fitnessGoals =
-    document.getElementById("fitnessGoals");
+    const fitnessGoals = document.getElementById("fitnessGoals");
 
-if (fitnessGoals) {
+    if (fitnessGoals) {
+      fitnessGoals.innerHTML = "";
 
-    fitnessGoals.innerHTML = "";
-
-    if (
-        data.fitness_goals &&
-        data.fitness_goals.length > 0
-    ) {
-
+      if (data.fitness_goals && data.fitness_goals.length > 0) {
         data.fitness_goals.forEach((item) => {
-
-            fitnessGoals.innerHTML += `
-                <li>${item}</li>
+          fitnessGoals.innerHTML += `
+               <span class="capsule">${item}</span>
             `;
-
         });
-
-    } else {
-
-        fitnessGoals.innerHTML =
-            "<li>No fitness goals available</li>";
+      } else {
+        fitnessGoals.innerHTML = "<li>No fitness goals available</li>";
+      }
     }
-}
 
+    /* FITNESS TIPS */
 
-/* FITNESS TIPS */
+    const fitnessTips = document.getElementById("fitnessTips");
 
-const fitnessTips =
-    document.getElementById("fitnessTips");
+    if (fitnessTips) {
+      fitnessTips.innerHTML = "";
 
-if (fitnessTips) {
-
-    fitnessTips.innerHTML = "";
-
-    if (
-        data.fitness_tips &&
-        data.fitness_tips.length > 0
-    ) {
-
+      if (data.fitness_tips && data.fitness_tips.length > 0) {
         data.fitness_tips.forEach((item) => {
-
-            fitnessTips.innerHTML += `
-                <li>${item}</li>
+          fitnessTips.innerHTML += `
+               <span class="capsule">${item}</span>
             `;
-
         });
-
-    } else {
-
-        fitnessTips.innerHTML =
-            "<li>No fitness tips available</li>";
+      } else {
+        fitnessTips.innerHTML = "<li>No fitness tips available</li>";
+      }
     }
-}
     /* CLEAR OUTPUTS FOR UNKNOWN FOOD */
 
     if (invalidFood) {

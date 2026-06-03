@@ -29,3 +29,22 @@ class UserProfile(models.Model):
     bmi = models.FloatField(null=True, blank=True)
 
     bmi_category = models.CharField(max_length=30, blank=True)
+    
+    
+class UserBadge(models.Model):
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    badge_name = models.CharField(
+        max_length=100
+    )
+
+    earned_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.badge_name}"
