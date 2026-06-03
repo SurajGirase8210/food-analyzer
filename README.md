@@ -1,307 +1,298 @@
-# 🍔 Food Analyzer
+# 🍎 AI Food Analyzer
 
-AI-powered food recognition and nutrition analysis web application built using Django and TensorFlow.
+An intelligent food recognition and nutrition analysis web application built using **Django**, **TensorFlow**, and **MobileNetV2**. The system identifies food items from images, estimates nutritional values, provides personalized health insights, and tracks user food consumption through an interactive dashboard.
 
 ---
 
-# 📌 Project Overview
+## 📌 Project Overview
 
-Food Analyzer is a full-stack web application that uses Deep Learning and Computer Vision to identify food items from images and provide nutritional information such as calories, protein, fat, and carbohydrates.
+AI Food Analyzer is designed to help users make healthier dietary decisions by automatically analyzing food images and providing detailed nutritional information.
 
-Users can:
+The application combines deep learning based food classification with nutrition intelligence to deliver:
+
+- Food image recognition
+- Calorie estimation
+- Macronutrient analysis
+- BMI-based recommendations
+- Personalized food insights
+- Consumption history tracking
+- Analytics dashboard
+- Achievement badge system
+
+---
+
+## 🚀 Key Features
+
+### 🖼 Food Image Recognition
 
 - Upload food images
-- Capture food using camera
-- Get AI-based predictions
-- View nutrition details
-- Track food history
-- Analyze calorie trends
-- Access dashboard analytics
+- Camera-based food capture
+- AI-powered classification using MobileNetV2
 
----
-
-# 🚀 Features
-
-## 🤖 AI Food Classification
-
-- Deep learning model trained using TensorFlow/Keras
-- Supports 15 food categories
-- Upload image or use live camera
-- Displays prediction confidence score
-
-## 🥗 Nutrition Analysis
-
-Displays:
+### 🥗 Nutrition Analysis
 
 - Calories
 - Protein
 - Fat
 - Carbohydrates
 
-## 👤 Authentication System
+### ❤️ Health Intelligence
 
-- User Signup
-- User Login
-- Logout functionality
-- Protected analyze page
+- Health score calculation
+- Health label generation
+- BMI-based recommendations
+- Risk alerts
+- Personalized nutrition suggestions
 
-## 📊 Dashboard Analytics
+### 📊 Analytics Dashboard
 
-- Accuracy graph
-- Loss graph
-- Confusion matrix
-- Classification metrics
-- Calorie trend chart
+- Daily calorie tracking
+- Weekly calorie trends
+- Most consumed foods
+- Average calorie consumption
+- Food consumption history
 
-## 🕘 History Tracking
+### 🏆 Gamification
 
-- Stores user predictions
-- Displays recent scans
-- Personalized profile statistics
+- First Analysis Badge
+- Food Explorer Badge
+- Food Master Badge
+- Food Champion Badge
 
-## 🎨 Modern UI
+### ✍ Manual Food Entry
 
-- Responsive design
-- Professional dashboard
-- Interactive charts
-- Styled authentication pages
-- Dynamic result cards
-
----
-
-# 🧠 Model Information
-
-## Food Classes
-
-The model is trained on:
-
-- carrot_cake
-- chicken_curry
-- chocolate_cake
-- cupcakes
-- donuts
-- french_fries
-- fried_rice
-- hamburger
-- hot_dog
-- ice_cream
-- pizza
-- samosa
-- spaghetti_bolognese
-- steak
-- sushi
-
-## Model Performance
-
-- Training Accuracy: ~82%
-- Validation Accuracy: ~79%
-
-## Model Format
-
-- Saved as `.h5`
+- Calculate nutrition manually
+- Instant calorie estimation
+- Nutrition summary generation
 
 ---
 
-# 🛠️ Technologies Used
+## 🏗 System Architecture
 
-## Frontend
+User Image Upload / Camera Capture
+↓
+Image Preprocessing
+↓
+MobileNetV2 CNN Model
+↓
+Food Classification
+↓
+Nutrition Dataset Lookup
+↓
+Health Analysis Engine
+↓
+Dashboard & Recommendations
 
-- HTML
-- CSS
+---
+
+## 🛠 Technology Stack
+
+### Frontend
+
+- HTML5
+- CSS3
 - JavaScript
 - Chart.js
 
-## Backend
+### Backend
 
 - Django
 - Python
 
-## AI / ML
+### AI / Machine Learning
 
 - TensorFlow
 - Keras
-- NumPy
-- Matplotlib
-- Scikit-learn
+- MobileNetV2
 
-## Database
+### Database
 
 - SQLite
 
----
+### Data Processing
 
-# 📂 Project Structure
-
-```bash
-food_analyzer_django/
-│
-├── analyzer_app/
-│   ├── templates/
-│   ├── static/
-│   ├── model/
-│   ├── migrations/
-│   ├── views.py
-│   ├── models.py
-│   ├── urls.py
-│   └── food_data.py
-│
-├── media/
-├── venv/
-├── manage.py
-├── requirements.txt
-└── README.md
-```
+- NumPy
+- Pandas
 
 ---
 
-# ⚙️ Installation
+## 📂 Dataset
 
-## 1️⃣ Clone Repository
+### Food-101 Dataset
+
+- 101 Food Categories
+- 101,000 Images
+- High-quality food image dataset
+
+### Custom Nutrition Dataset
+
+Contains:
+
+- Calories
+- Protein
+- Fat
+- Carbohydrates
+- Health labels
+- Recommendations
+- Risk alerts
+- Similar foods
+
+---
+
+## ⚙ Installation
+
+### Clone Repository
 
 ```bash
-git clone https://github.com/your-username/food-analyzer.git
+git clone https://github.com/SurajGirase8210/food-analyzer.git
 cd food-analyzer
 ```
 
----
-
-## 2️⃣ Create Virtual Environment
-
-### Windows
+### Create Virtual Environment
 
 ```bash
 python -m venv venv
+```
+
+### Activate Environment
+
+Windows:
+
+```bash
 venv\Scripts\activate
 ```
 
----
+Linux/Mac:
 
-## 3️⃣ Install Dependencies
+```bash
+source venv/bin/activate
+```
+
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## 4️⃣ Run Migrations
+### Run Migrations
 
 ```bash
 python manage.py migrate
 ```
 
----
-
-## 5️⃣ Start Server
+### Start Server
 
 ```bash
 python manage.py runserver
 ```
 
----
+Open:
 
-# 🌐 Open in Browser
-
-```bash
-http://127.0.0.1:8000/
+```text
+http://127.0.0.1:8000
 ```
 
 ---
 
-# 📈 Dashboard Includes
+## 📈 Dashboard Features
 
-- Training Accuracy Graph
-- Validation Accuracy Graph
-- Loss Graph
-- Confusion Matrix
-- Classification Report
-- Calorie Trends
+The dashboard provides:
 
----
-
-# 📷 Screenshots
-
-## Home Page
-
-![Home Page](screenshots/home.png)
-
-## Analyze Page
-
-![Analyze Page](screenshots/analyze.png)
-
-## Result Page
-
-![Result Page](screenshots/result.png)
-
-## Dashboard
-
-![Dashboard Page](screenshots/dashboard.png)
-
-## Profile Page
-
-![Profile Page](screenshots/profile.png)
-
-## Login Page
-
-![Login Page](screenshots/login.png)
-
-## Sign Up Page
-
-## ![Sign Up Page](screenshots/signup.png)
-
-# 🔒 Authentication Features
-
-- Login Validation
-- Signup Validation
-- Secure Routes
-- Session Management
-- User-specific History
+- Daily calorie intake
+- Weekly calorie analytics
+- Food distribution charts
+- Achievement badges
+- Average calorie statistics
+- Model evaluation metrics
 
 ---
 
-# 🧪 Future Improvements
+## 🧠 Machine Learning Model
 
-- Add more food classes
-- Improve model accuracy
-- Add dark mode
-- Deploy online
-- Add BMI calculator
-- Add food recommendations
-- Add Grad-CAM visualization
-- Add PDF nutrition report
+### Model Used
 
----
+MobileNetV2
 
-# 📚 Learning Outcomes
+### Why MobileNetV2?
 
-This project helped in understanding:
+- Lightweight architecture
+- Faster inference
+- High classification accuracy
+- Suitable for web deployment
 
-- Deep Learning
-- CNN Image Classification
-- Django Full-Stack Development
-- Database Integration
-- REST/API Communication
-- Frontend UI Design
-- Model Evaluation Techniques
+### Output
+
+The model predicts:
+
+- Food Name
+- Confidence Score
+- Top Predictions
 
 ---
 
-# 👨‍💻 Author
+## 📷 Application Screens
 
-Surajsingh Dhiraj Ninad Jayesh
+- Login Page
+  ![Login Page](screenshots/login.png)
 
-Final Year AI/ML Project
+- Registration Page
+  ![Register Page](screenshots/signup.png)
+
+- Home Page
+  ![Home Page](screenshots/home.png)
+
+- Food Analysis Page
+  ![Analyze Page](screenshots/analyze.png)
+
+- AI Result Page
+  ![Result PAge](screenshots/Result.png)
+
+- Dashboard Page
+  ![Dashboard Page](screenshots/Dashboard.png)
+
+- Food History Page
+  ![Food History](screenshots/history.png)
 
 ---
 
-# ⭐ Conclusion
+## 🎯 Future Enhancements
 
-Food Analyzer successfully combines Artificial Intelligence and Web Development to create an intelligent food recognition system with nutritional analysis and analytics dashboard.
+- Real-time food detection
+- Portion size estimation
+- Multi-food recognition
+- Barcode scanning
+- Mobile application
+- Cloud deployment
+- Personalized diet planning
+- Voice assistant integration
 
-The project demonstrates practical implementation of:
+---
+
+## 📚 Learning Outcomes
+
+This project demonstrates:
 
 - Deep Learning
 - Computer Vision
-- Django Backend Development
-- Interactive Frontend Design
-- AI Integration in Web Applications
+- Django Development
+- Full Stack Development
+- Data Visualization
+- Nutrition Analytics
+- User Authentication
+- Dashboard Design
+
+---
+
+## 👨‍💻 Author
+
+SurajSingh Dhiraj Jayesh Ninad Raj
+
+Final Year Engineering Project
+
+AI Food Analyzer using Deep Learning and Django
+
+---
+
+## 📄 License
+
+This project is developed for educational and academic purposes.
